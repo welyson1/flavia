@@ -28,6 +28,7 @@
             
             let y = 10;
             const pageHeight = doc.internal.pageSize.height;
+            const maxWidth = 180;
             doc.setFont("helvetica", "bold");
             doc.text("Currículo", 10, y);
             doc.setFont("helvetica", "normal");
@@ -40,47 +41,47 @@
                 }
             }
             
+            function writeText(text, x, y) {
+                const splitText = doc.splitTextToSize(text, maxWidth);
+                splitText.forEach(line => {
+                    if (y > pageHeight - 20) {
+                        doc.addPage();
+                        y = 10;
+                    }
+                    doc.text(line, x, y);
+                    y += 7;
+                });
+                return y;
+            }
+            
             function writeSection(title, data) {
                 doc.setFont("helvetica", "bold");
-                doc.text(title, 10, y);
+                y = writeText(title, 10, y);
                 doc.setFont("helvetica", "normal");
-                y += 10;
-                checkPageLimit();
                 
                 if (Array.isArray(data)) {
                     data.forEach(item => {
                         Object.entries(item).forEach(([key, value]) => {
                             if (typeof value === 'object') {
-                                doc.text(`${key}:`, 10, y);
-                                y += 10;
+                                y = writeText(`${key}:`, 10, y);
                                 Object.entries(value).forEach(([subKey, subValue]) => {
-                                    doc.text(`  ${subKey}: ${subValue}`, 15, y);
-                                    y += 10;
-                                    checkPageLimit();
+                                    y = writeText(`  ${subKey}: ${subValue}`, 15, y);
                                 });
                             } else {
-                                doc.text(`${key}: ${value}`, 10, y);
-                                y += 10;
-                                checkPageLimit();
+                                y = writeText(`${key}: ${value}`, 10, y);
                             }
                         });
                         y += 5;
-                        checkPageLimit();
                     });
                 } else {
                     Object.entries(data).forEach(([key, value]) => {
                         if (typeof value === 'object') {
-                            doc.text(`${key}:`, 10, y);
-                            y += 10;
+                            y = writeText(`${key}:`, 10, y);
                             Object.entries(value).forEach(([subKey, subValue]) => {
-                                doc.text(`  ${subKey}: ${subValue}`, 15, y);
-                                y += 10;
-                                checkPageLimit();
+                                y = writeText(`  ${subKey}: ${subValue}`, 15, y);
                             });
                         } else {
-                            doc.text(`${key}: ${value}`, 10, y);
-                            y += 10;
-                            checkPageLimit();
+                            y = writeText(`${key}: ${value}`, 10, y);
                         }
                     });
                 }
