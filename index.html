@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exportar JSON para PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h2>Exportar JSON para PDF</h2>
+    <textarea id="jsonInput" rows="10" cols="50"></textarea>
+    <br>
+    <button onclick="exportarPDF()">Gerar PDF</button>
+
+    <script>
+        function exportarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const jsonText = document.getElementById("jsonInput").value;
+            
+            let jsonData;
+            try {
+                jsonData = JSON.parse(jsonText);
+            } catch (error) {
+                alert("JSON inválido!");
+                return;
+            }
+            
+            let y = 10;
+            const pageHeight = doc.internal.pageSize.height;
+            doc.setFont("helvetica", "bold");
+            doc.text("Currículo", 10, y);
+            doc.setFont("helvetica", "normal");
+            y += 10;
+            
+            function checkPageLimit() {
+                if (y > pageHeight - 20) {
+                    doc.addPage();
+                    y = 10;
+                }
+            }
+            
+            function writeSection(title, data) {
+                doc.setFont("helvetica", "bold");
+                doc.text(title, 10, y);
+                doc.setFont("helvetica", "normal");
+                y += 10;
+                checkPageLimit();
+                
+                if (Array.isArray(data)) {
+                    data.forEach(item => {
+                        Object.entries(item).forEach(([key, value]) => {
+                            if (typeof value === 'object') {
+                                doc.text(`${key}:`, 10, y);
+                                y += 10;
+                                Object.entries(value).forEach(([subKey, subValue]) => {
+                                    doc.text(`  ${subKey}: ${subValue}`, 15, y);
+                                    y += 10;
+                                    checkPageLimit();
+                                });
+                            } else {
+                                doc.text(`${key}: ${value}`, 10, y);
+                                y += 10;
+                                checkPageLimit();
+                            }
+                        });
+                        y += 5;
+                        checkPageLimit();
+                    });
+                } else {
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (typeof value === 'object') {
+                            doc.text(`${key}:`, 10, y);
+                            y += 10;
+                            Object.entries(value).forEach(([subKey, subValue]) => {
+                                doc.text(`  ${subKey}: ${subValue}`, 15, y);
+                                y += 10;
+                                checkPageLimit();
+                            });
+                        } else {
+                            doc.text(`${key}: ${value}`, 10, y);
+                            y += 10;
+                            checkPageLimit();
+                        }
+                    });
+                }
+                y += 5;
+            }
+            
+            writeSection("Dados Básicos", jsonData.basico);
+            writeSection("Experiência", jsonData.experiencia);
+            writeSection("Educação", jsonData.educacao);
+            writeSection("Habilidades", jsonData.habilidades);
+            writeSection("Certificações", jsonData.certificacoes);
+            writeSection("Projetos", jsonData.projetos);
+            writeSection("Prêmios", jsonData.premios);
+            
+            doc.save("curriculo.pdf");
+        }
+    </script>
+</body>
+</html>
