@@ -1,103 +1,97 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exportar JSON para PDF</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Cards de RPG</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .card {
+            width: 250px;
+            height: 350px;
+            background: white;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .story-container {
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h2 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        p {
+            font-size: 0.9em;
+        }
+        @media print {
+            body {
+                background: none;
+            }
+            .card {
+                box-shadow: none;
+                border-color: black;
+                page-break-inside: avoid;
+            }
+            .print-btn {
+                display: none !important;
+            }
+        }
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h2>Exportar JSON para PDF</h2>
-    <textarea id="jsonInput" rows="10" cols="50"></textarea>
-    <br>
-    <button onclick="exportarPDF()">Gerar PDF</button>
-
-    <script>
-        function exportarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const jsonText = document.getElementById("jsonInput").value;
-            
-            let jsonData;
-            try {
-                jsonData = JSON.parse(jsonText);
-            } catch (error) {
-                alert("JSON inválido!");
-                return;
-            }
-            
-            let y = 10;
-            const pageHeight = doc.internal.pageSize.height;
-            const maxWidth = 180;
-            doc.setFont("helvetica", "bold");
-            doc.text("Currículo", 10, y);
-            doc.setFont("helvetica", "normal");
-            y += 10;
-            
-            function checkPageLimit() {
-                if (y > pageHeight - 20) {
-                    doc.addPage();
-                    y = 10;
-                }
-            }
-            
-            function writeText(text, x, y) {
-                const splitText = doc.splitTextToSize(text, maxWidth);
-                splitText.forEach(line => {
-                    if (y > pageHeight - 20) {
-                        doc.addPage();
-                        y = 10;
-                    }
-                    doc.text(line, x, y);
-                    y += 7;
-                });
-                return y;
-            }
-            
-            function writeSection(title, data) {
-                doc.setFont("helvetica", "bold");
-                y = writeText(title, 10, y);
-                doc.setFont("helvetica", "normal");
-                
-                if (Array.isArray(data)) {
-                    data.forEach(item => {
-                        Object.entries(item).forEach(([key, value]) => {
-                            if (typeof value === 'object') {
-                                y = writeText(`${key}:`, 10, y);
-                                Object.entries(value).forEach(([subKey, subValue]) => {
-                                    y = writeText(`  ${subKey}: ${subValue}`, 15, y);
-                                });
-                            } else {
-                                y = writeText(`${key}: ${value}`, 10, y);
-                            }
-                        });
-                        y += 5;
-                    });
-                } else {
-                    Object.entries(data).forEach(([key, value]) => {
-                        if (typeof value === 'object') {
-                            y = writeText(`${key}:`, 10, y);
-                            Object.entries(value).forEach(([subKey, subValue]) => {
-                                y = writeText(`  ${subKey}: ${subValue}`, 15, y);
-                            });
-                        } else {
-                            y = writeText(`${key}: ${value}`, 10, y);
-                        }
-                    });
-                }
-                y += 5;
-            }
-            
-            writeSection("Dados Básicos", jsonData.basico);
-            writeSection("Experiência", jsonData.experiencia);
-            writeSection("Educação", jsonData.educacao);
-            writeSection("Habilidades", jsonData.habilidades);
-            writeSection("Certificações", jsonData.certificacoes);
-            writeSection("Projetos", jsonData.projetos);
-            writeSection("Prêmios", jsonData.premios);
-            
-            doc.save("curriculo.pdf");
-        }
-    </script>
+    <button class="print-btn" onclick="window.print()">Salvar como PDF</button>
+    <div class="card-container">
+        <div class="card">
+            <h2>Guerreiro</h2>
+            <p>Classe forte e resistente, especializada em combate corpo a corpo.</p>
+        </div>
+        <div class="card">
+            <h2>Mago</h2>
+            <p>Usuário de magia poderosa, mas frágil em combate físico.</p>
+        </div>
+        <div class="card">
+            <h2>Ladino</h2>
+            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
+        </div>
+        <div class="card">
+            <h2>Ladino</h2>
+            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
+        </div>
+        <div class="card">
+            <h2>Ladino</h2>
+            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
+        </div>
+        <div class="card">
+            <h2>Ladino</h2>
+            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
+        </div>
+    </div>
+    <div class="story-container">
+        <h2>História</h2>
+        <p>Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.</p>
+    </div>
 </body>
 </html>
