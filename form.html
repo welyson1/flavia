@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor do Banco de Dados JSON</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    fieldset {
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+    legend {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 8px 15px;
+      font-size: 1em;
+      margin-top: 10px;
+    }
+    .personagem-entry {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .personagem-entry h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Editor do Banco de Dados JSON</h1>
+  <form id="jsonForm">
+    <!-- Personagens (informações gerais) -->
+    <fieldset>
+      <legend>Personagens</legend>
+      <label>
+        Antagonistas/Funcao:
+        <input type="text" id="personagens_0_Antagonistas_Funcao" value="Vilão principal">
+      </label>
+      <label>
+        AntagonistasNomesTipos:
+        <input type="text" id="personagens_0_AntagonistasNomesTipos" value="Dr. Caos (cientista maligno)">
+      </label>
+      <label>
+        CoadjuvantesFuncao/Tipos:
+        <input type="text" id="personagens_0_CoadjuvantesFuncao_Tipos" value="Aliado">
+      </label>
+      <label>
+        CoadjuvantesNomesTipos:
+        <input type="text" id="personagens_0_CoadjuvantesNomesTipos" value="Robô Assistente X7">
+      </label>
+      <label>
+        Narrador:
+        <input type="text" id="personagens_0_Narrador" value="Narrador onisciente">
+      </label>
+      <label>
+        Protagonistas/funcao:
+        <input type="text" id="personagens_0_Protagonistas_funcao" value="Herói">
+      </label>
+      <label>
+        ProtagonistasNomes/Tipos:
+        <input type="text" id="personagens_0_ProtagonistasNomes_Tipos" value="Capitão Virtus (herói cibernético)">
+      </label>
+    </fieldset>
+
+    <!-- Unidade Curricular -->
+    <fieldset>
+      <legend>Unidade Curricular</legend>
+      <label>
+        Ano:
+        <input type="text" id="unidade_0_Ano" value="2024">
+      </label>
+      <label>
+        Conteúdo:
+        <input type="text" id="unidade_0_Conteudo" value="Introdução à Inteligência Artificial">
+      </label>
+      <label>
+        Funções de aprendizagem:
+        <input type="text" id="unidade_0_Funcoes_de_aprendizagem" value="Lembrar, Analisar">
+      </label>
+      <label>
+        Habilidades sociais/interpessoais:
+        <input type="text" id="unidade_0_Habilidades_sociais_interpessoais" value="Capacidade de aprender">
+      </label>
+      <label>
+        Habilidades técnicas que o aluno deve exercitar/desenvolver:
+        <input type="text" id="unidade_0_Habilidades_tecnicas" value="Programação em Python">
+      </label>
+      <label>
+        Nome da unidade curricular:
+        <input type="text" id="unidade_0_Nome_unidade_curricular" value="Inteligência Artificial Aplicada">
+      </label>
+      <label>
+        Periodo:
+        <input type="text" id="unidade_0_Periodo" value="2">
+      </label>
+    </fieldset>
+
+    <!-- Narrativa -->
+    <fieldset>
+      <legend>Narrativa</legend>
+      <label>
+        ambientacao(atmosfera, cenario e espaco):
+        <input type="text" id="narrativa_0_ambientacao" value="Cidade futurista dominada por IA">
+      </label>
+      <label>
+        desafios:
+        <input type="text" id="narrativa_0_desafios" value="Derrubar um sistema opressor">
+      </label>
+      <label>
+        enredo:
+        <input type="text" id="narrativa_0_enredo" value="Um jovem hacker descobre um segredo sombrio sobre a IA governante">
+      </label>
+      <label>
+        ideia/solucao:
+        <input type="text" id="narrativa_0_ideia_solucao" value="Criar um vírus libertador">
+      </label>
+      <label>
+        Parte interessada:
+        <input type="text" id="narrativa_0_Parte_interessada" value="Cidadãos oprimidos">
+      </label>
+      <label>
+        questao/problema:
+        <input type="text" id="narrativa_0_questao_problema" value="A inteligência artificial assumiu controle total da sociedade">
+      </label>
+      <label>
+        situacoes/problemas:
+        <input type="text" id="narrativa_0_situacoes_problemas" value="O protagonista precisa escolher entre o caos e a liberdade">
+      </label>
+    </fieldset>
+
+    <!-- Objetivos de Aprendizagem -->
+    <fieldset>
+      <legend>Objetivos de Aprendizagem</legend>
+      <label>
+        Objetivo Geral:
+        <input type="text" id="objetivos_0_objetivo_geral" value="Capacitar os alunos no desenvolvimento de aplicações de IA">
+      </label>
+      <label>
+        Objetivo Específico 1:
+        <input type="text" id="objetivos_0_objetivo_especifico_1" value="Ensinar conceitos básicos de aprendizado de máquina">
+      </label>
+      <label>
+        Objetivo Específico 2:
+        <input type="text" id="objetivos_0_objetivo_especifico_2" value="Aplicar modelos preditivos para resolver problemas reais">
+      </label>
+      <label>
+        Objetivo Específico 3:
+        <input type="text" id="objetivos_0_objetivo_especifico_3" value="Desenvolver pensamento crítico sobre ética na IA">
+      </label>
+    </fieldset>
+
+    <!-- Estética -->
+    <fieldset>
+      <legend>Estética</legend>
+      <label>
+        Estilo visual:
+        <input type="text" id="estetica_0_estilo_visual" value="Cyberpunk com cores neon">
+      </label>
+      <label>
+        Som ambiente:
+        <input type="text" id="estetica_0_som_ambiente" value="Música eletrônica e sons futuristas">
+      </label>
+      <label>
+        Animações:
+        <input type="text" id="estetica_0_animacoes" value="Movimentos fluidos e hologramas interativos">
+      </label>
+    </fieldset>
+
+    <!-- Mecânica -->
+    <fieldset>
+      <legend>Mecânica</legend>
+      <label>
+        Regras do jogo:
+        <input type="text" id="mecanica_0_regras_do_jogo" value="Sistema de decisões ramificadas">
+      </label>
+      <label>
+        Interação:
+        <input type="text" id="mecanica_0_interacao" value="Escolhas influenciam o final">
+      </label>
+      <label>
+        Sistema de progresso:
+        <input type="text" id="mecanica_0_sistema_de_progresso" value="Habilidades desbloqueadas conforme o jogo avança">
+      </label>
+    </fieldset>
+
+    <!-- Dinâmica -->
+    <fieldset>
+      <legend>Dinâmica</legend>
+      <label>
+        Motivação do jogador:
+        <input type="text" id="dinamica_0_motivacao_do_jogador" value="Explorar e tomar decisões estratégicas">
+      </label>
+      <label>
+        Interação social:
+        <input type="text" id="dinamica_0_interacao_social" value="Sistema de aliança e traição">
+      </label>
+      <label>
+        Resolução de conflitos:
+        <input type="text" id="dinamica_0_resolucao_de_conflitos" value="Combate e diplomacia">
+      </label>
+    </fieldset>
+
+    <!-- Dinâmica do Personagem -->
+    <fieldset>
+      <legend>Dinâmica do Personagem</legend>
+      <label>
+        Evolução do personagem:
+        <input type="text" id="dinamica_personagem_0_evolucao" value="O protagonista começa inexperiente e se torna um mestre hacker">
+      </label>
+      <label>
+        Habilidades especiais:
+        <input type="text" id="dinamica_personagem_0_habilidades_especiais" value="Hackeamento, manipulação de IA, furtividade">
+      </label>
+      <label>
+        Relações:
+        <input type="text" id="dinamica_personagem_0_relacoes" value="Aliados podem se tornar inimigos e vice-versa">
+      </label>
+    </fieldset>
+
+    <!-- Ficha dos Personagens - Seção dinâmica -->
+    <fieldset>
+      <legend>Ficha dos Personagens</legend>
+      <div id="ficha-personagens-container">
+        <!-- Os formulários de personagem serão adicionados aqui -->
+      </div>
+      <button type="button" id="add-personagem-btn">Adicionar Personagem</button>
+    </fieldset>
+
+    <button type="button" onclick="submitForm()">Salvar</button>
+  </form>
+
+  <h2>JSON Atualizado</h2>
+  <textarea id="jsonOutput" rows="20" cols="80"></textarea>
+
+  <script>
+    let personagemCount = 0;
+
+    // Função para adicionar um novo formulário de personagem
+    function addPersonagem(initialData) {
+      personagemCount++;
+      const div = document.createElement("div");
+      div.className = "personagem-entry";
+
+      // Cabeçalho com o número do personagem
+      const header = document.createElement("h3");
+      header.textContent = "Personagem " + personagemCount;
+      div.appendChild(header);
+
+      // Campo: Nome
+      const nomeLabel = document.createElement("label");
+      nomeLabel.textContent = "Nome:";
+      const nomeInput = document.createElement("input");
+      nomeInput.type = "text";
+      nomeInput.name = "nome";
+      if (initialData && initialData.nome) nomeInput.value = initialData.nome;
+      nomeLabel.appendChild(nomeInput);
+      div.appendChild(nomeLabel);
+
+      // Campo: Idade
+      const idadeLabel = document.createElement("label");
+      idadeLabel.textContent = "Idade:";
+      const idadeInput = document.createElement("input");
+      idadeInput.type = "text";
+      idadeInput.name = "idade";
+      if (initialData && initialData.idade) idadeInput.value = initialData.idade;
+      idadeLabel.appendChild(idadeInput);
+      div.appendChild(idadeLabel);
+
+      // Campo: Personalidade
+      const personalidadeLabel = document.createElement("label");
+      personalidadeLabel.textContent = "Personalidade:";
+      const personalidadeInput = document.createElement("input");
+      personalidadeInput.type = "text";
+      personalidadeInput.name = "personalidade";
+      if (initialData && initialData.personalidade) personalidadeInput.value = initialData.personalidade;
+      personalidadeLabel.appendChild(personalidadeInput);
+      div.appendChild(personalidadeLabel);
+
+      // Campo: Habilidade principal
+      const habilidadeLabel = document.createElement("label");
+      habilidadeLabel.textContent = "Habilidade principal:";
+      const habilidadeInput = document.createElement("input");
+      habilidadeInput.type = "text";
+      habilidadeInput.name = "habilidade_principal";
+      if (initialData && initialData.habilidade_principal) habilidadeInput.value = initialData.habilidade_principal;
+      habilidadeLabel.appendChild(habilidadeInput);
+      div.appendChild(habilidadeLabel);
+
+      // Campo: Ponto fraco
+      const pontoFracoLabel = document.createElement("label");
+      pontoFracoLabel.textContent = "Ponto fraco:";
+      const pontoFracoInput = document.createElement("input");
+      pontoFracoInput.type = "text";
+      pontoFracoInput.name = "ponto_fraco";
+      if (initialData && initialData.ponto_fraco) pontoFracoInput.value = initialData.ponto_fraco;
+      pontoFracoLabel.appendChild(pontoFracoInput);
+      div.appendChild(pontoFracoLabel);
+
+      // Campo: História de fundo
+      const historiaLabel = document.createElement("label");
+      historiaLabel.textContent = "História de fundo:";
+      const historiaTextarea = document.createElement("textarea");
+      historiaTextarea.name = "historia_de_fundo";
+      historiaTextarea.rows = 3;
+      if (initialData && initialData.historia_de_fundo) historiaTextarea.value = initialData.historia_de_fundo;
+      historiaLabel.appendChild(historiaTextarea);
+      div.appendChild(historiaLabel);
+
+      // Botão para remover o personagem
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.textContent = "Remover Personagem";
+      removeBtn.onclick = function() {
+        div.remove();
+      };
+      div.appendChild(removeBtn);
+
+      // Adiciona o novo formulário de personagem ao container
+      document.getElementById("ficha-personagens-container").appendChild(div);
+    }
+
+    // Ao carregar a página, configura o botão de adicionar e insere dois exemplos iniciais
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("add-personagem-btn").addEventListener("click", function() {
+        addPersonagem();
+      });
+      // Adiciona dois personagens iniciais (opcional)
+      addPersonagem({
+        nome: "Ethan Zero",
+        idade: "23",
+        personalidade: "Determinado, inteligente, cético",
+        habilidade_principal: "Hackeamento avançado",
+        ponto_fraco: "Falta de confiança em aliados",
+        historia_de_fundo: "Órfão criado por uma IA benevolente, agora luta contra um regime opressor"
+      });
+      addPersonagem({
+        nome: "Dr. Caos",
+        idade: "50",
+        personalidade: "Manipulador, brilhante, implacável",
+        habilidade_principal: "Controle total sobre IA e robôs",
+        ponto_fraco: "Ego inflado, subestima seus oponentes",
+        historia_de_fundo: "Criador da IA dominante, agora tenta manter seu controle absoluto"
+      });
+    });
+
+    // Função para coletar os dados do formulário e gerar o JSON
+    function submitForm() {
+      var updatedData = { fichas: [] };
+
+      // Seção: Personagens (dados gerais)
+      var personagensData = {
+        "Antagonistas/Funcao": document.getElementById("personagens_0_Antagonistas_Funcao").value,
+        "AntagonistasNomesTipos": document.getElementById("personagens_0_AntagonistasNomesTipos").value,
+        "CoadjuvantesFuncao/Tipos": document.getElementById("personagens_0_CoadjuvantesFuncao_Tipos").value,
+        "CoadjuvantesNomesTipos": document.getElementById("personagens_0_CoadjuvantesNomesTipos").value,
+        "Narrador": document.getElementById("personagens_0_Narrador").value,
+        "Protagonistas/funcao": document.getElementById("personagens_0_Protagonistas_funcao").value,
+        "ProtagonistasNomes/Tipos": document.getElementById("personagens_0_ProtagonistasNomes_Tipos").value
+      };
+      updatedData.fichas.push({ tipo: "Personagens", dados: [personagensData] });
+
+      // Seção: Unidade Curricular
+      var unidadeData = {
+        "Ano": document.getElementById("unidade_0_Ano").value,
+        "Conteúdo": document.getElementById("unidade_0_Conteudo").value,
+        "Funções de aprendizagem": document.getElementById("unidade_0_Funcoes_de_aprendizagem").value,
+        "Habilidades sociais/interpessoais": document.getElementById("unidade_0_Habilidades_sociais_interpessoais").value,
+        "Habilidades técnicas que o aluno deve exercitar/desenvolver": document.getElementById("unidade_0_Habilidades_tecnicas").value,
+        "Nome da unidade curricular": document.getElementById("unidade_0_Nome_unidade_curricular").value,
+        "Periodo": document.getElementById("unidade_0_Periodo").value
+      };
+      updatedData.fichas.push({ tipo: "Unidade Curricular", dados: [unidadeData] });
+
+      // Seção: Narrativa
+      var narrativaData = {
+        "ambientacao(atmosfera, cenario e espaco)": document.getElementById("narrativa_0_ambientacao").value,
+        "desafios": document.getElementById("narrativa_0_desafios").value,
+        "enredo": document.getElementById("narrativa_0_enredo").value,
+        "ideia/solucao": document.getElementById("narrativa_0_ideia_solucao").value,
+        "Parte interessada": document.getElementById("narrativa_0_Parte_interessada").value,
+        "questao/problema": document.getElementById("narrativa_0_questao_problema").value,
+        "situacoes/problemas": document.getElementById("narrativa_0_situacoes_problemas").value
+      };
+      updatedData.fichas.push({ tipo: "Narrativa", dados: [narrativaData] });
+
+      // Seção: Objetivos de Aprendizagem
+      var objetivosData = {
+        "Objetivo Geral": document.getElementById("objetivos_0_objetivo_geral").value,
+        "Objetivo Específico 1": document.getElementById("objetivos_0_objetivo_especifico_1").value,
+        "Objetivo Específico 2": document.getElementById("objetivos_0_objetivo_especifico_2").value,
+        "Objetivo Específico 3": document.getElementById("objetivos_0_objetivo_especifico_3").value
+      };
+      updatedData.fichas.push({ tipo: "Objetivos de Aprendizagem", dados: [objetivosData] });
+
+      // Seção: Estética
+      var esteticaData = {
+        "Estilo visual": document.getElementById("estetica_0_estilo_visual").value,
+        "Som ambiente": document.getElementById("estetica_0_som_ambiente").value,
+        "Animações": document.getElementById("estetica_0_animacoes").value
+      };
+      updatedData.fichas.push({ tipo: "Estética", dados: [esteticaData] });
+
+      // Seção: Mecânica
+      var mecanicaData = {
+        "Regras do jogo": document.getElementById("mecanica_0_regras_do_jogo").value,
+        "Interação": document.getElementById("mecanica_0_interacao").value,
+        "Sistema de progresso": document.getElementById("mecanica_0_sistema_de_progresso").value
+      };
+      updatedData.fichas.push({ tipo: "Mecânica", dados: [mecanicaData] });
+
+      // Seção: Dinâmica
+      var dinamicaData = {
+        "Motivação do jogador": document.getElementById("dinamica_0_motivacao_do_jogador").value,
+        "Interação social": document.getElementById("dinamica_0_interacao_social").value,
+        "Resolução de conflitos": document.getElementById("dinamica_0_resolucao_de_conflitos").value
+      };
+      updatedData.fichas.push({ tipo: "Dinâmica", dados: [dinamicaData] });
+
+      // Seção: Dinâmica do Personagem
+      var dinamicaPersonagemData = {
+        "Evolução do personagem": document.getElementById("dinamica_personagem_0_evolucao").value,
+        "Habilidades especiais": document.getElementById("dinamica_personagem_0_habilidades_especiais").value,
+        "Relações": document.getElementById("dinamica_personagem_0_relacoes").value
+      };
+      updatedData.fichas.push({ tipo: "Dinâmica do Personagem", dados: [dinamicaPersonagemData] });
+
+      // Seção: Ficha dos Personagens (dados dinâmicos)
+      var fichaPersonagens = [];
+      const personagemEntries = document.querySelectorAll("#ficha-personagens-container .personagem-entry");
+      personagemEntries.forEach(function(entry) {
+        const nome = entry.querySelector("input[name='nome']").value;
+        const idade = entry.querySelector("input[name='idade']").value;
+        const personalidade = entry.querySelector("input[name='personalidade']").value;
+        const habilidadePrincipal = entry.querySelector("input[name='habilidade_principal']").value;
+        const pontoFraco = entry.querySelector("input[name='ponto_fraco']").value;
+        const historiaDeFundo = entry.querySelector("textarea[name='historia_de_fundo']").value;
+        
+        fichaPersonagens.push({
+          "Nome": nome,
+          "Idade": idade,
+          "Personalidade": personalidade,
+          "Habilidade principal": habilidadePrincipal,
+          "Ponto fraco": pontoFraco,
+          "História de fundo": historiaDeFundo
+        });
+      });
+      updatedData.fichas.push({ tipo: "Ficha dos Personagens", dados: fichaPersonagens });
+
+      // Exibe o JSON formatado na textarea
+      document.getElementById("jsonOutput").value = JSON.stringify(updatedData, null, 2);
+    }
+  </script>
+</body>
+</html>
