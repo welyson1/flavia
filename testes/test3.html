@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Aventura</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        textarea, input { width: 100%; margin-bottom: 10px; padding: 5px; }
+        button { margin-top: 5px; }
+        .item { display: flex; align-items: center; gap: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Editor de Aventura</h2>
+        <label>Unidade Curricular:</label>
+        <input type="text" id="unidadeCurricular" oninput="updateObject()">
+
+        <label>Tema:</label>
+        <input type="text" id="tema" oninput="updateObject()">
+
+        <h3>Habilidades Sociais</h3>
+        <div id="habilidadesSociais"></div>
+        <button onclick="addHabilidade()">Adicionar Habilidade</button>
+               
+        <h3>Materiais</h3>
+        <div id="materiais"></div>
+        <button onclick="addMaterial()">Adicionar Material</button>
+
+        <h3>Personagens</h3>
+        <div id="personagens"></div>
+        <button onclick="addPersonagem()">Adicionar Personagem</button>
+
+        <h3>Objeto JSON Atual</h3>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        let data = {
+            unidadeCurricular: "12",
+            habilidadesSociais: ["12", "12"],
+            enredo: [{ problemas: "12", desafios: "12", solucao: "12" }],
+            tema: "12",
+            sessoes: [{ nome: "Sessão 1", cenas: [{ descricao: "Introdução da aventura", turnos: 3 }] }],
+            personagens: [{ descricao: "12", habilidadesTecnicas: [{ descricao: "12", parametros: "12" }] }],
+            materiais: [{ descricao: "12", quantidade: "12" }]
+        };
+
+        function updateObject() {
+            // data.unidadeCurricular = document.getElementById("unidadeCurricular").value;
+            // data.tema = document.getElementById("tema").value;
+            document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        }
+
+        function addHabilidade() {
+            data.habilidadesSociais.push("");
+            renderHabilidades();
+        }
+
+        function removeHabilidade(index) {
+            data.habilidadesSociais.splice(index, 1);
+            renderHabilidades();
+        }
+
+        function renderHabilidades() {
+            const container = document.getElementById("habilidadesSociais");
+            container.innerHTML = "";
+            data.habilidadesSociais.forEach((habilidade, index) => {
+                container.innerHTML += `
+                    <div class="item">
+                        <input type="text" value="${habilidade}" oninput="data.habilidadesSociais[${index}] = this.value; updateObject();">
+                        <button onclick="removeHabilidade(${index})">Remover</button>
+                    </div>
+                `;
+            });
+            updateObject();
+        }
+
+        function addMaterial() {
+            data.materiais.push({ descricao: "", quantidade: "" });
+            renderMateriais();
+        }
+
+        function removeMaterial(index) {
+            data.materiais.splice(index, 1);
+            renderMateriais();
+        }
+
+        function renderMateriais() {
+            const container = document.getElementById("materiais");
+            container.innerHTML = "";
+            data.materiais.forEach((material, index) => {
+                container.innerHTML += `
+                    <div class="item">
+                        <input type="text" placeholder="Descrição" value="${material.descricao}" oninput="data.materiais[${index}].descricao = this.value; updateObject();">
+                        <input type="text" placeholder="Quantidade" value="${material.quantidade}" oninput="data.materiais[${index}].quantidade = this.value; updateObject();">
+                        <button onclick="removeMaterial(${index})">Remover</button>
+                    </div>
+                `;
+            });
+            updateObject();
+        }
+
+        function addPersonagem() {
+            data.personagens.push({ descricao: "", habilidadesTecnicas: [{ descricao: "", parametros: "" }] });
+            renderPersonagens();
+        }
+
+        function removePersonagem(index) {
+            data.personagens.splice(index, 1);
+            renderPersonagens();
+        }
+
+        function addHabilidadeTecnica(personagemIndex) {
+            data.personagens[personagemIndex].habilidadesTecnicas.push({ descricao: "", parametros: "" });
+            renderPersonagens();
+        }
+
+        function removeHabilidadeTecnica(personagemIndex, habilidadeIndex) {
+            data.personagens[personagemIndex].habilidadesTecnicas.splice(habilidadeIndex, 1);
+            renderPersonagens();
+        }
+
+        function renderPersonagens() {
+            const container = document.getElementById("personagens");
+            container.innerHTML = "";
+            data.personagens.forEach((personagem, pIndex) => {
+                let habilidadesHtml = personagem.habilidadesTecnicas.map((habilidade, hIndex) => `
+                    <div class="item">
+                        <input type="text" placeholder="Descrição" value="${habilidade.descricao}" oninput="data.personagens[${pIndex}].habilidadesTecnicas[${hIndex}].descricao = this.value; updateObject();">
+                        <input type="text" placeholder="Parâmetros" value="${habilidade.parametros}" oninput="data.personagens[${pIndex}].habilidadesTecnicas[${hIndex}].parametros = this.value; updateObject();">
+                        <button onclick="removeHabilidadeTecnica(${pIndex}, ${hIndex})">Remover</button>
+                    </div>
+                `).join('');
+                container.innerHTML += `
+                    <div class="item">
+                        <input type="text" placeholder="Descrição do Personagem" value="${personagem.descricao}" oninput="data.personagens[${pIndex}].descricao = this.value; updateObject();">
+                        <button onclick="removePersonagem(${pIndex})">Remover</button>
+                    </div>
+                    ${habilidadesHtml}
+                    <button onclick="addHabilidadeTecnica(${pIndex})">Adicionar Habilidade Técnica</button>
+                `;
+            });
+            updateObject();
+        }
+
+        renderHabilidades();
+        renderMateriais();
+        renderPersonagens();
+    </script>
+</body>
+</html>

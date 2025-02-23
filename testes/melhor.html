@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Base de Dados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        pre {
+            background: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .enredo-item, .sessao-item, .cena-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciador de Base de Dados</h1>
+
+        <form id="dataForm">
+            <h2>Enredo</h2>
+            <button type="button" onclick="addEnredo()">Adicionar Enredo</button>
+            <div id="enredoContainer"></div>
+
+            <h2>Sessões</h2>
+            <button type="button" onclick="addSessao()">Adicionar Sessão</button>
+            <div id="sessoesContainer"></div>
+        </form>
+
+        <h2>Dados Salvos</h2>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        // Objeto da base de dados
+        let database = {
+            enredo: [],
+            sessoes: []
+        };
+
+        // Carregar dados salvos do localStorage
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedData = localStorage.getItem("database");
+            if (savedData) {
+                database = JSON.parse(savedData);
+
+                // Garante que "enredo" e "sessoes" sejam listas, mesmo se estiverem ausentes ou corrompidas no localStorage
+                if (!Array.isArray(database.enredo)) {
+                    database.enredo = [];
+                }
+                if (!Array.isArray(database.sessoes)) {
+                    database.sessoes = [];
+                }
+            }
+            renderEnredo();
+            renderSessoes();
+            renderData();
+        });
+
+        // Adicionar um novo enredo
+        function addEnredo() {
+            if (!Array.isArray(database.enredo)) {
+                database.enredo = [];
+            }
+
+            database.enredo.push({ problemas: "", desafios: "", solucao: "" });
+            syncData();
+            renderEnredo();
+        }
+
+        // Atualizar valores do enredo ao digitar
+        function updateEnredo(index, field, value) {
+            if (!Array.isArray(database.enredo)) return;
+            database.enredo[index][field] = value;
+            syncData();
+        }
+
+        // Remover um enredo da lista
+        function removeEnredo(index) {
+            if (!Array.isArray(database.enredo)) return;
+            database.enredo.splice(index, 1);
+            syncData();
+            renderEnredo();
+        }
+
+        // Renderizar os enredos na tela
+        function renderEnredo() {
+            const container = document.getElementById("enredoContainer");
+            container.innerHTML = "";
+
+            if (!Array.isArray(database.enredo)) {
+                database.enredo = [];
+            }
+
+            database.enredo.forEach((item, index) => {
+                const enredoDiv = document.createElement("div");
+                enredoDiv.className = "enredo-item";
+
+                enredoDiv.innerHTML = `
+                    <label>Problemas:</label>
+                    <input type="text" value="${item.problemas}" 
+                        oninput="updateEnredo(${index}, 'problemas', this.value)">
+
+                    <label>Desafios:</label>
+                    <input type="text" value="${item.desafios}" 
+                        oninput="updateEnredo(${index}, 'desafios', this.value)">
+
+                    <label>Solução:</label>
+                    <input type="text" value="${item.solucao}" 
+                        oninput="updateEnredo(${index}, 'solucao', this.value)">
+
+                    <button onclick="removeEnredo(${index})">Remover</button>`
+                ;
+
+                container.appendChild(enredoDiv);
+            });
+
+            syncData();
+        }
+
+        // Adicionar uma nova sessão
+        function addSessao() {
+            if (!Array.isArray(database.sessoes)) {
+                database.sessoes = [];
+            }
+
+            database.sessoes.push({ nome: "", cenas: [] });
+            syncData();
+            renderSessoes();
+        }
+
+        // Adicionar uma nova cena a uma sessão
+        function addCena(sessaoIndex) {
+            if (!Array.isArray(database.sessoes[sessaoIndex].cenas)) {
+                database.sessoes[sessaoIndex].cenas = [];
+            }
+
+            database.sessoes[sessaoIndex].cenas.push({ descricao: "", turnos: 0 });
+            syncData();
+            renderSessoes();
+        }
+
+        // Atualizar valores da sessão ao digitar
+        function updateSessao(sessaoIndex, field, value) {
+            if (!Array.isArray(database.sessoes)) return;
+            database.sessoes[sessaoIndex][field] = value;
+            syncData();
+        }
+
+        // Atualizar valores da cena ao digitar
+        function updateCena(sessaoIndex, cenaIndex, field, value) {
+            if (!Array.isArray(database.sessoes[sessaoIndex].cenas)) return;
+            database.sessoes[sessaoIndex].cenas[cenaIndex][field] = value;
+            syncData();
+        }
+
+        // Remover uma sessão da lista
+        function removeSessao(index) {
+            if (!Array.isArray(database.sessoes)) return;
+            database.sessoes.splice(index, 1);
+            syncData();
+            renderSessoes();
+        }
+
+        // Remover uma cena de uma sessão
+        function removeCena(sessaoIndex, cenaIndex) {
+            if (!Array.isArray(database.sessoes[sessaoIndex].cenas)) return;
+            database.sessoes[sessaoIndex].cenas.splice(cenaIndex, 1);
+            syncData();
+            renderSessoes();
+        }
+
+        // Renderizar as sessões na tela
+        function renderSessoes() {
+            const container = document.getElementById("sessoesContainer");
+            container.innerHTML = "";
+
+            if (!Array.isArray(database.sessoes)) {
+                database.sessoes = [];
+            }
+
+            database.sessoes.forEach((sessao, sessaoIndex) => {
+                const sessaoDiv = document.createElement("div");
+                sessaoDiv.className = "sessao-item";
+
+                sessaoDiv.innerHTML = `
+                    <label>Nome da Sessão:</label>
+                    <input type="text" value="${sessao.nome}" 
+                        oninput="updateSessao(${sessaoIndex}, 'nome', this.value)">
+
+                    <button onclick="addCena(${sessaoIndex})">Adicionar Cena</button>
+                    <button onclick="removeSessao(${sessaoIndex})">Remover Sessão</button>`
+                ;
+
+                const cenasContainer = document.createElement("div");
+                cenasContainer.className = "cenas-container";
+
+                sessao.cenas.forEach((cena, cenaIndex) => {
+                    const cenaDiv = document.createElement("div");
+                    cenaDiv.className = "cena-item";
+
+                    cenaDiv.innerHTML = `
+                        <label>Descrição da Cena:</label>
+                        <input type="text" value="${cena.descricao}" 
+                            oninput="updateCena(${sessaoIndex}, ${cenaIndex}, 'descricao', this.value)">
+
+                        <label>Turnos:</label>
+                        <input type="number" value="${cena.turnos}" 
+                            oninput="updateCena(${sessaoIndex}, ${cenaIndex}, 'turnos', this.value)">
+
+                        <button onclick="removeCena(${sessaoIndex}, ${cenaIndex})">Remover Cena</button>`
+                    ;
+
+                    cenasContainer.appendChild(cenaDiv);
+                });
+
+                sessaoDiv.appendChild(cenasContainer);
+                container.appendChild(sessaoDiv);
+            });
+
+            syncData();
+        }
+
+        // Sincronizar dados com localStorage
+        function syncData() {
+            localStorage.setItem("database", JSON.stringify(database));
+            renderData();
+        }
+
+        // Exibir os dados no final da página
+        function renderData() {
+            document.getElementById("output").textContent = JSON.stringify(database, null, 4);
+        }
+
+    </script>
+</body>
+</html>

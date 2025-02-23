@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Aventura</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        textarea, input { width: 100%; margin-bottom: 10px; padding: 5px; }
+        button { margin-top: 5px; }
+        .item { display: flex; align-items: center; gap: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Editor de Aventura</h2>
+        <label>Unidade Curricular:</label>
+        <input type="text" id="unidadeCurricular" oninput="updateObject()">
+
+        <h3>Habilidades Sociais</h3>
+        <div id="habilidadesSociais"></div>
+        <button onclick="addHabilidade()">Adicionar Habilidade</button>
+
+        <h3>Materiais</h3>
+        <div id="materiais"></div>
+        <button onclick="addMaterial()">Adicionar Material</button>
+
+        <h3>Personagens</h3>
+        <div id="personagens"></div>
+        <button onclick="addPersonagem()">Adicionar Personagem</button>
+
+        <h3>Sessões</h3>
+        <div id="sessoes"></div>
+        <button onclick="addSessao()">Adicionar Sessão</button>
+
+        <h3>Objeto JSON Atual</h3>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        let data = {
+            unidadeCurricular: "",
+            habilidadesSociais: ["", ""],
+            enredo: [{ problemas: "", desafios: "", solucao: "" }],
+            tema: "",
+            sessoes: [{ nome: "Sessão 1", cenas: [{ descricao: "Introdução da aventura", turnos: 3 }] }],
+            personagens: [{ descricao: "", habilidadesTecnicas: [{ descricao: "", parametros: "" }] }],
+            materiais: [{ descricao: "", quantidade: "" }]
+        };
+
+        function updateObject() {
+            data.unidadeCurricular = document.getElementById("unidadeCurricular").value;
+            document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        }
+
+        function addSessao() {
+            data.sessoes.push({ nome: "", cenas: [{ descricao: "", turnos: 0 }] });
+            renderSessoes();
+        }
+
+        function removeSessao(index) {
+            data.sessoes.splice(index, 1);
+            renderSessoes();
+        }
+
+        function addCena(sessaoIndex) {
+            data.sessoes[sessaoIndex].cenas.push({ descricao: "", turnos: 0 });
+            renderSessoes();
+        }
+
+        function removeCena(sessaoIndex, cenaIndex) {
+            data.sessoes[sessaoIndex].cenas.splice(cenaIndex, 1);
+            renderSessoes();
+        }
+
+        function renderSessoes() {
+            const container = document.getElementById("sessoes");
+            container.innerHTML = "";
+            data.sessoes.forEach((sessao, sIndex) => {
+                let cenasHtml = sessao.cenas.map((cena, cIndex) => `
+                    <div class="item">
+                        <input type="text" placeholder="Descrição da Cena" value="${cena.descricao}" oninput="data.sessoes[${sIndex}].cenas[${cIndex}].descricao = this.value; updateObject();">
+                        <input type="number" placeholder="Turnos" value="${cena.turnos}" oninput="data.sessoes[${sIndex}].cenas[${cIndex}].turnos = parseInt(this.value); updateObject();">
+                        <button onclick="removeCena(${sIndex}, ${cIndex})">Remover Cena</button>
+                    </div>
+                `).join('');
+                container.innerHTML += `
+                    <div class="item">
+                        <input type="text" placeholder="Nome da Sessão" value="${sessao.nome}" oninput="data.sessoes[${sIndex}].nome = this.value; updateObject();">
+                        <button onclick="removeSessao(${sIndex})">Remover Sessão</button>
+                    </div>
+                    ${cenasHtml}
+                    <button onclick="addCena(${sIndex})">Adicionar Cena</button>
+                `;
+            });
+            updateObject();
+        }
+
+        renderSessoes();
+    </script>
+</body>
+</html>

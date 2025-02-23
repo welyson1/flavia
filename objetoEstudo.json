@@ -1,0 +1,44 @@
+{
+    "unidadeCurricular": "",
+    "habilidadesSociais": ["", ""],
+    "enredo": [
+      {
+        "problemas": "",
+        "desafios": "",
+        "solucao": ""
+      }
+    ],
+    "tema": "",
+    "sessoes": [
+    {
+        "nome": "Sessão 1",
+        "cenas": [
+        {
+          "descricao": "Introdução da aventura",
+          "turnos": 3
+        }
+        ]
+    }
+    ],  
+    "personagens": [
+      {
+        "descricao": "",
+        "habilidadesTecnicas": [
+          {
+              "descricao": "",
+              "parametros": ""
+          },
+          {
+            "descricao": "",
+            "parametros": ""
+          }
+        ]
+      }
+    ],
+    "materiais": [
+      {
+        "descricao": "",
+        "quantidade": ""
+      }
+    ]
+}

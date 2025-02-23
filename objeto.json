@@ -1,0 +1,93 @@
+{
+  "unidadeCurricular": "",
+  "anoPeriodo": "",
+  "conteudo": "",
+  "habilidadesSociais": ["", ""],
+  "funcoesCognitivasCriar": "",
+  "funcoesCognitivasAplicar": "",
+  "funcoesCognitivasSintetizar": "",
+  "funcoesCognitivasEntender": "",
+  "funcoesCognitivasAnalisar": "",
+  "funcoesCognitivasLembrar": "",
+  "ambientacaoAtmosfera": "",
+  "ambientacaoCenario": "",
+  "ambientacaoEespaco": ["", ""],
+  "enredo": [
+    {
+      "problemas": "",
+      "desafios": "",
+      "solucao": ""
+    },
+    {
+      "problemas": "",
+      "desafios": "",
+      "solucao": ""
+    }
+  ],
+  "tema": "",
+  "sessoes": [
+  {
+      "nome": "Sessão 1",
+      "cenas": [
+      {
+        "descricao": "Introdução da aventura",
+        "turnos": 3
+      },
+      {
+        "descricao": "Encontro com NPC",
+        "turnos": 2
+      }
+      ]
+  },
+  {
+      "nome": "Sessão 2",
+      "cenas": [
+      {
+          "descricao": "Batalha contra os goblins",
+          "turnos": 5
+      }
+      ]
+  }
+  ],  
+  "funcoes": ["", "", ""],
+  "regrasAleatoriedade": "",
+  "regrasRecompensas": "",
+  "regrasFeedback": "",
+  "personagens": [
+    {
+      "descricao": "",
+      "funcao": "",
+      "categoria": "",
+      "habilidadesTecnicas": [
+        {
+            "descricao": "",
+            "parametros": ""
+        },
+        {
+          "descricao": "",
+          "parametros": ""
+        }
+      ],
+      "habilidadesSociais": [
+        {
+          "descricao": "",
+          "parametros": ""
+        },
+        {
+          "descricao": "",
+          "parametros": ""
+        }
+      ]
+    }
+  ],
+  "materiais": [
+    {
+      "descricao": "",
+      "quantidade": ""
+    },
+    {
+      "descricao": "",
+      "quantidade": ""
+    }
+  ]
+}

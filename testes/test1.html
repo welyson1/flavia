@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manipulador de Sessões</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .sessao, .cena {
+            margin-left: 20px;
+        }
+
+        .sessao-title {
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .remove-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Manipulador de Sessões de Aventura</h1>
+
+<div class="section">
+    <label for="tema">Tema da Aventura:</label>
+    <input type="text" id="tema" value="valor">
+</div>
+
+<div id="sessoes-container">
+    <!-- Sessões serão adicionadas aqui -->
+</div>
+
+<button class="add-btn" onclick="addSessao()">Adicionar Sessão</button>
+
+<script>
+    let dados = {
+        "tema": "valor",
+        "sessoes": [
+            {
+                "nome": "Sessão 1",
+                "cenas": [
+                    { "descricao": "Introdução da aventura", "turnos": 3 },
+                    { "descricao": "Encontro com NPC", "turnos": 2 }
+                ]
+            },
+            {
+                "nome": "Sessão 2",
+                "cenas": [
+                    { "descricao": "Batalha contra os goblins", "turnos": 5 }
+                ]
+            }
+        ]
+    };
+
+    // Função para renderizar a interface com os dados atuais
+    function renderizar() {
+        document.getElementById('tema').value = dados.tema;
+
+        const sessoesContainer = document.getElementById('sessoes-container');
+        sessoesContainer.innerHTML = ''; // Limpa o conteúdo atual
+
+        dados.sessoes.forEach((sessao, index) => {
+            const sessaoDiv = document.createElement('div');
+            sessaoDiv.classList.add('sessao');
+            sessaoDiv.innerHTML = `
+                <div>
+                    <label for="sessao-${index}">Nome da Sessão:</label>
+                    <input type="text" id="sessao-${index}" value="${sessao.nome}" oninput="atualizarSessao(${index}, 'nome', this.value)">
+                    <button class="remove-btn" onclick="removerSessao(${index})">Remover Sessão</button>
+                </div>
+                <div id="cenas-container-${index}">
+                    <!-- Cenas serão adicionadas aqui -->
+                </div>
+                <button class="add-btn" onclick="adicionarCena(${index})">Adicionar Cena</button>
+            `;
+            sessoesContainer.appendChild(sessaoDiv);
+
+            sessao.cenas.forEach((cena, cenaIndex) => {
+                const cenasContainer = document.getElementById(`cenas-container-${index}`);
+                const cenaDiv = document.createElement('div');
+                cenaDiv.classList.add('cena');
+                cenaDiv.innerHTML = `
+                    <div>
+                        <label for="cena-desc-${index}-${cenaIndex}">Descrição:</label>
+                        <input type="text" id="cena-desc-${index}-${cenaIndex}" value="${cena.descricao}" oninput="atualizarCena(${index}, ${cenaIndex}, 'descricao', this.value)">
+                    </div>
+                    <div>
+                        <label for="cena-turnos-${index}-${cenaIndex}">Turnos:</label>
+                        <input type="number" id="cena-turnos-${index}-${cenaIndex}" value="${cena.turnos}" oninput="atualizarCena(${index}, ${cenaIndex}, 'turnos', this.value)">
+                    </div>
+                    <button class="remove-btn" onclick="removerCena(${index}, ${cenaIndex})">Remover Cena</button>
+                `;
+                cenasContainer.appendChild(cenaDiv);
+            });
+        });
+    }
+
+    // Função para adicionar uma sessão
+    function addSessao() {
+        dados.sessoes.push({
+            "nome": "Nova Sessão",
+            "cenas": []
+        });
+        renderizar();
+    }
+
+    // Função para remover uma sessão
+    function removerSessao(index) {
+        dados.sessoes.splice(index, 1);
+        renderizar();
+    }
+
+    // Função para atualizar o nome de uma sessão
+    function atualizarSessao(index, campo, valor) {
+        dados.sessoes[index][campo] = valor;
+    }
+
+    // Função para adicionar uma cena em uma sessão
+    function adicionarCena(sessaoIndex) {
+        dados.sessoes[sessaoIndex].cenas.push({ "descricao": "Nova Cena", "turnos": 1 });
+        renderizar();
+    }
+
+    // Função para remover uma cena
+    function removerCena(sessaoIndex, cenaIndex) {
+        dados.sessoes[sessaoIndex].cenas.splice(cenaIndex, 1);
+        renderizar();
+    }
+
+    // Função para atualizar uma cena
+    function atualizarCena(sessaoIndex, cenaIndex, campo, valor) {
+        dados.sessoes[sessaoIndex].cenas[cenaIndex][campo] = valor;
+    }
+
+    // Inicializa a interface com os dados
+    renderizar();
+
+    // Atualiza o tema em tempo real
+    document.getElementById('tema').addEventListener('input', function() {
+        dados.tema = this.value;
+    });
+</script>
+
+</body>
+</html>

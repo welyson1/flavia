@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manipulador de Sessões</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .sessao, .cena, .personagem, .material {
+            margin-left: 20px;
+        }
+
+        .sessao-title, .personagem-title, .material-title {
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], textarea {
+            padding: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .remove-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Manipulador de Sessões de Aventura</h1>
+
+<div class="section">
+    <label for="tema">Tema da Aventura:</label>
+    <input type="text" id="tema" value="valor">
+</div>
+
+<div class="section">
+    <label for="unidadeCurricular">Unidade Curricular:</label>
+    <input type="text" id="unidadeCurricular" value="valor">
+</div>
+
+<div class="section">
+    <label for="anoPeriodo">Ano e Período:</label>
+    <input type="text" id="anoPeriodo" value="valor">
+</div>
+
+<div class="section">
+    <label for="conteudo">Conteúdo:</label>
+    <input type="text" id="conteudo" value="valor">
+</div>
+
+<div class="section">
+    <label for="habilidadesSociais">Habilidades Sociais:</label>
+    <input type="text" id="habilidadesSociais" value="valor">
+</div>
+
+<div class="section">
+    <label for="criar">Função Cognitiva Criar:</label>
+    <input type="text" id="criar" value="valor">
+</div>
+
+<div class="section">
+    <label for="aplicar">Função Cognitiva Aplicar:</label>
+    <input type="text" id="aplicar" value="valor">
+</div>
+
+<div class="section">
+    <label for="sintetizar">Função Cognitiva Sintetizar:</label>
+    <input type="text" id="sintetizar" value="valor">
+</div>
+
+<div class="section">
+    <label for="entender">Função Cognitiva Entender:</label>
+    <input type="text" id="entender" value="valor">
+</div>
+
+<div class="section">
+    <label for="analisar">Função Cognitiva Analisar:</label>
+    <input type="text" id="analisar" value="valor">
+</div>
+
+<div class="section">
+    <label for="lembrar">Função Cognitiva Lembrar:</label>
+    <input type="text" id="lembrar" value="valor">
+</div>
+
+<div class="section">
+    <label for="atmosfera">Atmosfera:</label>
+    <input type="text" id="atmosfera" value="valor">
+</div>
+
+<div class="section">
+    <label for="cenario">Cenário:</label>
+    <input type="text" id="cenario" value="valor">
+</div>
+
+<div class="section">
+    <label for="espaco">Espaço (separado por vírgulas):</label>
+    <input type="text" id="espaco" value="valor,valor">
+</div>
+
+<div id="sessoes-container">
+    <!-- Sessões serão adicionadas aqui -->
+</div>
+
+<button class="add-btn" onclick="addSessao()">Adicionar Sessão</button>
+
+<div class="section">
+    <label for="problemas">Problemas (separados por vírgulas):</label>
+    <input type="text" id="problemas" value="valor">
+</div>
+
+<div class="section">
+    <label for="desafios">Desafios (separados por vírgulas):</label>
+    <input type="text" id="desafios" value="valor">
+</div>
+
+<div class="section">
+    <label for="solucao">Solução:</label>
+    <input type="text" id="solucao" value="valor">
+</div>
+
+<div class="section">
+    <h2>Ambientação</h2>
+    <label for="atmosfera">Atmosfera:</label>
+    <input type="text" id="atmosfera" oninput="atualizarAmbientacao('atmosfera', this.value)">
+    
+    <label for="cenario">Cenário:</label>
+    <input type="text" id="cenario" oninput="atualizarAmbientacao('cenario', this.value)">
+
+    <div id="espacos-container"></div>
+    <button class="add-btn" onclick="adicionarEspaco()">Adicionar Espaço</button>
+</div>
+
+<div class="section">
+    <h2>Enredo</h2>
+    <div id="enredo-container"></div>
+    <button class="add-btn" onclick="adicionarEnredo()">Adicionar Enredo</button>
+</div>
+
+<script>
+    let dados = {
+        "unidadeCurricular": "valor",
+        "anoPeriodo": "valor",
+        "conteudo": "valor",
+        "habilidadesSociais": "valor",
+        "funcoesCognitivas": {
+            "criar": "valor",
+            "aplicar": "valor",
+            "sintetizar": "valor",
+            "entender": "valor",
+            "analisar": "valor",
+            "lembrar": "valor"
+        },
+        "ambientacao": {
+            "atmosfera": "valor",
+            "cenario": "valor",
+            "espaco": ["valor", "valor"]
+        },
+        "enredo": [
+            {
+                "problemas": "valor",
+                "desafios": "valor",
+                "solucao": "valor"
+            },
+            {
+                "problemas": "valor",
+                "desafios": "valor",
+                "solucao": "valor"
+            }
+        ],
+        "tema": "valor",
+        "sessoes": [
+            {
+                "nome": "Sessão 1",
+                "cenas": [
+                    { "descricao": "Introdução da aventura", "turnos": 3 },
+                    { "descricao": "Encontro com NPC", "turnos": 2 }
+                ]
+            },
+            {
+                "nome": "Sessão 2",
+                "cenas": [
+                    { "descricao": "Batalha contra os goblins", "turnos": 5 }
+                ]
+            }
+        ],  
+        "participantes": {
+            "funcoes": ["valor", "valor", "valor"]
+        },
+        "regras": {
+            "aleatoriedade": "valor",
+            "recompensas": "valor",
+            "feedback": "valor"
+        },
+        "personagens": [
+            {
+                "descricao": "valor",
+                "funcao": "valor",
+                "categoria": "valor",
+                "habilidades": {
+                    "tecnicas": [
+                        {
+                            "descricao": "valor",
+                            "parametros": "valor"
+                        }
+                    ],
+                    "sociais": [
+                        {
+                            "descricao": "valor",
+                            "parametros": "valor"
+                        }
+                    ]
+                }
+            }
+        ],
+        "materiais": [
+            {
+                "descricao": "valor",
+                "quantidade": "valor"
+            },
+            {
+                "descricao": "valor",
+                "quantidade": "valor"
+            }
+        ]
+    };
+
+    // Função para renderizar a interface com os dados atuais
+    function renderizar() {
+        // Atualiza os valores na interface
+        document.getElementById('unidadeCurricular').value = dados.unidadeCurricular;
+        document.getElementById('anoPeriodo').value = dados.anoPeriodo;
+        document.getElementById('conteudo').value = dados.conteudo;
+        document.getElementById('habilidadesSociais').value = dados.habilidadesSociais;
+        document.getElementById('criar').value = dados.funcoesCognitivas.criar;
+        document.getElementById('aplicar').value = dados.funcoesCognitivas.aplicar;
+        document.getElementById('sintetizar').value = dados.funcoesCognitivas.sintetizar;
+        document.getElementById('entender').value = dados.funcoesCognitivas.entender;
+        document.getElementById('analisar').value = dados.funcoesCognitivas.analisar;
+        document.getElementById('lembrar').value = dados.funcoesCognitivas.lembrar;
+        document.getElementById('atmosfera').value = dados.ambientacao.atmosfera;
+        document.getElementById('cenario').value = dados.ambientacao.cenario;
+        document.getElementById('espaco').value = dados.ambientacao.espaco.join(",");
+        document.getElementById('problemas').value = dados.enredo.map(e => e.problemas).join(",");
+        document.getElementById('desafios').value = dados.enredo.map(e => e.desafios).join(",");
+        document.getElementById('solucao').value = dados.enredo.map(e => e.solucao).join(",");
+
+        const sessoesContainer = document.getElementById('sessoes-container');
+        sessoesContainer.innerHTML = ''; // Limpa o conteúdo atual
+
+        dados.sessoes.forEach((sessao, index) => {
+            const sessaoDiv = document.createElement('div');
+            sessaoDiv.classList.add('sessao');
+            sessaoDiv.innerHTML = `
+                <div>
+                    <label for="sessao-${index}">Nome da Sessão:</label>
+                    <input type="text" id="sessao-${index}" value="${sessao.nome}" oninput="atualizarSessao(${index}, 'nome', this.value)">
+                    <button class="remove-btn" onclick="removerSessao(${index})">Remover Sessão</button>
+                </div>
+                <div id="cenas-container-${index}">
+                    <!-- Cenas serão adicionadas aqui -->
+                </div>
+                <button class="add-btn" onclick="adicionarCena(${index})">Adicionar Cena</button>
+            `;
+            sessoesContainer.appendChild(sessaoDiv);
+
+            sessao.cenas.forEach((cena, cenaIndex) => {
+                const cenasContainer = document.getElementById(`cenas-container-${index}`);
+                const cenaDiv = document.createElement('div');
+                cenaDiv.classList.add('cena');
+                cenaDiv.innerHTML = `
+                    <div>
+                        <label for="cena-desc-${index}-${cenaIndex}">Descrição:</label>
+                        <input type="text" id="cena-desc-${index}-${cenaIndex}" value="${cena.descricao}" oninput="atualizarCena(${index}, ${cenaIndex}, 'descricao', this.value)">
+                    </div>
+                    <div>
+                        <label for="cena-turnos-${index}-${cenaIndex}">Turnos:</label>
+                        <input type="number" id="cena-turnos-${index}-${cenaIndex}" value="${cena.turnos}" oninput="atualizarCena(${index}, ${cenaIndex}, 'turnos', this.value)">
+                    </div>
+                    <button class="remove-btn" onclick="removerCena(${index}, ${cenaIndex})">Remover Cena</button>
+                `;
+                cenasContainer.appendChild(cenaDiv);
+            });
+        });
+    }
+
+    // Função para adicionar uma sessão
+    function addSessao() {
+        dados.sessoes.push({
+            "nome": "Nova Sessão",
+            "cenas": []
+        });
+        renderizar();
+    }
+
+    // Função para remover uma sessão
+    function removerSessao(index) {
+        dados.sessoes.splice(index, 1);
+        renderizar();
+    }
+
+    // Função para atualizar o nome de uma sessão
+    function atualizarSessao(index, campo, valor) {
+        dados.sessoes[index][campo] = valor;
+    }
+
+    // Função para adicionar uma cena em uma sessão
+    function adicionarCena(sessaoIndex) {
+        dados.sessoes[sessaoIndex].cenas.push({ "descricao": "Nova Cena", "turnos": 1 });
+        renderizar();
+    }
+
+    // Função para remover uma cena
+    function removerCena(sessaoIndex, cenaIndex) {
+        dados.sessoes[sessaoIndex].cenas.splice(cenaIndex, 1);
+        renderizar();
+    }
+
+    // Função para atualizar uma cena
+    function atualizarCena(sessaoIndex, cenaIndex, campo, valor) {
+        dados.sessoes[sessaoIndex].cenas[cenaIndex][campo] = valor;
+    }
+
+    // Inicializa a interface com os dados
+    renderizar();
+
+    // Atualiza os dados em tempo real
+    document.getElementById('tema').addEventListener('input', function() {
+        dados.tema = this.value;
+    });
+
+    // Função para atualizar outros campos
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+            const id = this.id;
+            const value = this.value;
+
+            if (id === 'unidadeCurricular') dados.unidadeCurricular = value;
+            if (id === 'anoPeriodo') dados.anoPeriodo = value;
+            if (id === 'conteudo') dados.conteudo = value;
+            if (id === 'habilidadesSociais') dados.habilidadesSociais = value;
+            if (id === 'criar') dados.funcoesCognitivas.criar = value;
+            if (id === 'aplicar') dados.funcoesCognitivas.aplicar = value;
+            if (id === 'sintetizar') dados.funcoesCognitivas.sintetizar = value;
+            if (id === 'entender') dados.funcoesCognitivas.entender = value;
+            if (id === 'analisar') dados.funcoesCognitivas.analisar = value;
+            if (id === 'lembrar') dados.funcoesCognitivas.lembrar = value;
+            if (id === 'atmosfera') dados.ambientacao.atmosfera = value;
+            if (id === 'cenario') dados.ambientacao.cenario = value;
+            if (id === 'espaco') dados.ambientacao.espaco = value.split(',');
+            if (id === 'problemas') dados.enredo.forEach(e => e.problemas = value);
+            if (id === 'desafios') dados.enredo.forEach(e => e.desafios = value);
+            if (id === 'solucao') dados.enredo.forEach(e => e.solucao = value);
+        });
+    });
+</script>
+
+</body>
+</html>

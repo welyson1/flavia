@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editor de Objeto JSON</title>
+    <style>
+        .section {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .array-item {
+            margin: 5px 0;
+            padding: 5px;
+            border: 1px solid #eee;
+        }
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        input, textarea {
+            margin: 5px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Campos principais -->
+        <div class="section">
+            <h2>Dados Principais</h2>
+            <input type="text" data-path="unidadeCurricular" placeholder="Unidade Curricular">
+            <input type="text" data-path="anoPeriodo" placeholder="Ano/Período">
+            <textarea data-path="conteudo" placeholder="Conteúdo"></textarea>
+            <input type="text" data-path="habilidadesSociais" placeholder="Habilidades Sociais">
+        </div>
+
+        <!-- Funções Cognitivas -->
+        <div class="section">
+            <h2>Funções Cognitivas</h2>
+            <input type="text" data-path="funcoesCognitivas.criar" placeholder="Criar">
+            <input type="text" data-path="funcoesCognitivas.aplicar" placeholder="Aplicar">
+            <input type="text" data-path="funcoesCognitivas.sintetizar" placeholder="Sintetizar">
+            <input type="text" data-path="funcoesCognitivas.entender" placeholder="Entender">
+            <input type="text" data-path="funcoesCognitivas.analisar" placeholder="Analisar">
+            <input type="text" data-path="funcoesCognitivas.lembrar" placeholder="Lembrar">
+        </div>
+
+        <!-- Ambientação -->
+        <div class="section">
+            <h2>Ambientação</h2>
+            <input type="text" data-path="ambientacao.atmosfera" placeholder="Atmosfera">
+            <input type="text" data-path="ambientacao.cenario" placeholder="Cenário">
+            <div id="espaco-container" data-array-path="ambientacao.espaco">
+                <h3>Espaço</h3>
+            </div>
+            <button onclick="addArrayItem('ambientacao.espaco', '')">Adicionar Espaço</button>
+        </div>
+
+        <!-- Enredo -->
+        <div class="section">
+            <h2>Enredo</h2>
+            <div id="enredo-container"></div>
+            <button onclick="addEnredo()">Adicionar Enredo</button>
+        </div>
+
+        <!-- Restante dos campos... -->
+    </div>
+
+    <script>
+        // Modelo inicial
+        let data = {
+            unidadeCurricular: "1",
+            anoPeriodo: "1",
+            conteudo: "1",
+            habilidadesSociais: "1",
+            funcoesCognitivas: {
+                criar: "1",
+                aplicar: "1",
+                sintetizar: "1",
+                entender: "1",
+                analisar: "1",
+                lembrar: "1"
+            },
+            ambientacao: {
+                atmosfera: "1",
+                cenario: "1",
+                espaco: []
+            },
+            enredo: [],
+            //... outros campos
+        };
+
+        // Carregar dados salvos
+        function loadData() {
+            const saved = localStorage.getItem('data');
+            if (saved) {
+                data = JSON.parse(saved);
+                updateAllInputs();
+                renderArrays();
+            }
+        }
+
+        // Salvar dados
+        function saveData() {
+            localStorage.setItem('data', JSON.stringify(data));
+            console.log('Dados salvos!');
+        }
+
+        // Atualizar todos os inputs
+        function updateAllInputs() {
+            document.querySelectorAll('[data-path]').forEach(input => {
+                const path = input.getAttribute('data-path');
+                input.value = getValueByPath(data, path);
+            });
+        }
+
+        // Manipulação de paths
+        function getValueByPath(obj, path) {
+            return path.split('.').reduce((acc, key) => acc[key], obj);
+        }
+
+        function setValueByPath(obj, path, value) {
+            const keys = path.split('.');
+            let current = obj;
+            for (let i = 0; i < keys.length - 1; i++) {
+                current = current[keys[i]];
+            }
+            current[keys[keys.length - 1]] = value;
+            saveData();
+        }
+
+        // Manipulação de arrays
+        function addArrayItem(path, defaultValue) {
+            const arr = getValueByPath(data, path);
+            arr.push(defaultValue);
+            saveData();
+            renderArray(path);
+        }
+
+        function renderArray(path) {
+            const container = document.querySelector(`[data-array-path="${path}"]`);
+            const arr = getValueByPath(data, path);
+            container.innerHTML = '<h3>' + path.split('.').pop() + '</h3>';
+            
+            arr.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'array-item';
+                
+                const input = document.createElement('input');
+                input.value = item;
+                input.addEventListener('input', e => {
+                    arr[index] = e.target.value;
+                    saveData();
+                });
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remover';
+                removeBtn.onclick = () => {
+                    arr.splice(index, 1);
+                    saveData();
+                    renderArray(path);
+                };
+                
+                div.appendChild(input);
+                div.appendChild(removeBtn);
+                container.appendChild(div);
+            });
+        }
+
+        // Enredo
+        function addEnredo() {
+            data.enredo.push({
+                problemas: "",
+                desafios: "",
+                solucao: ""
+            });
+            saveData();
+            renderEnredo();
+        }
+
+        function renderEnredo() {
+            const container = document.getElementById('enredo-container');
+            container.innerHTML = '';
+            
+            data.enredo.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'array-item';
+                
+                const inputs = ['problemas', 'desafios', 'solucao'].map(field => {
+                    const input = document.createElement('input');
+                    input.placeholder = field.charAt(0).toUpperCase() + field.slice(1);
+                    input.value = item[field];
+                    input.addEventListener('input', e => {
+                        data.enredo[index][field] = e.target.value;
+                        saveData();
+                    });
+                    return input;
+                });
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remover';
+                removeBtn.onclick = () => {
+                    data.enredo.splice(index, 1);
+                    saveData();
+                    renderEnredo();
+                };
+                
+                inputs.forEach(input => div.appendChild(input));
+                div.appendChild(removeBtn);
+                container.appendChild(div);
+            });
+        }
+
+        // Event listeners
+        document.querySelectorAll('[data-path]').forEach(input => {
+            input.addEventListener('input', e => {
+                const path = e.target.getAttribute('data-path');
+                setValueByPath(data, path, e.target.value);
+            });
+        });
+
+        // Inicialização
+        loadData();
+        renderArrays();
+    </script>
+</body>
+</html>

@@ -1,97 +1,458 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cards de RPG</title>
+    <title>Editor de JSON Dinâmico</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f8f8f8;
-        }
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .card {
-            width: 250px;
-            height: 350px;
-            background: white;
-            border: 2px solid black;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-        .story-container {
-            width: 100%;
-            height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        h2 {
+            background-color: #f4f4f4;
             margin: 0;
-            font-size: 1.2em;
+            padding: 20px;
         }
-        p {
-            font-size: 0.9em;
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        @media print {
-            body {
-                background: none;
-            }
-            .card {
-                box-shadow: none;
-                border-color: black;
-                page-break-inside: avoid;
-            }
-            .print-btn {
-                display: none !important;
-            }
+        #editor {
+            margin-top: 20px;
         }
-        .print-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        pre {
+            background: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
         }
+        /* Esconde os botões "Delete Last" e "Delete All" */
+        .json-editor-btntype-deletelast,
+        .json-editor-btntype-deleteall,
+        .json-editor-btntype-properties,
+        .json-editor-btn-moveup,
+        .json-editor-btn-movedown {
+            display: none !important;
+        }
+
+        #fluxo-processo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #lista-processos {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        #lista-processos li {
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 10px;
+            background-color: #ccc;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        #lista-processos li.destacado {
+            background-color: #007bff;
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+        }
+
     </style>
 </head>
 <body>
-    <button class="print-btn" onclick="window.print()">Salvar como PDF</button>
-    <div class="card-container">
-        <div class="card">
-            <h2>Guerreiro</h2>
-            <p>Classe forte e resistente, especializada em combate corpo a corpo.</p>
+
+    <div class="container">
+        <h1 class="text-center">Editor de JSON Dinâmico</h1>
+        <div id="fluxo-processo" class="mt-3">
+            <ul id="lista-processos"></ul>
         </div>
-        <div class="card">
-            <h2>Mago</h2>
-            <p>Usuário de magia poderosa, mas frágil em combate físico.</p>
-        </div>
-        <div class="card">
-            <h2>Ladino</h2>
-            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
-        </div>
-        <div class="card">
-            <h2>Ladino</h2>
-            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
-        </div>
-        <div class="card">
-            <h2>Ladino</h2>
-            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
-        </div>
-        <div class="card">
-            <h2>Ladino</h2>
-            <p>Ágil e furtivo, excelente em ataques surpresa e armadilhas.</p>
-        </div>
+        
+
+        <button class="btn btn-success mt-3" onclick="mudarEtapa(-1)">Etapa Anterior</button>
+        <button class="btn btn-primary mt-3" onclick="mudarEtapa(1)">Próxima Etapa</button>      
+          
+        <div id="editor"></div>
+        <button class="btn btn-primary mt-3" onclick="saveData()">Salvar Dados</button>
+        <h2 class="mt-4">JSON Salvo</h2>
+        <pre id="output"></pre>
     </div>
-    <div class="story-container">
-        <h2>História</h2>
-        <p>Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.Adicione aqui a história do seu RPG. Esta seção ocupará toda a página ao ser impressa.</p>
-    </div>
+
+    <script>
+        let etapaAtual = 1; // Começa na primeira etapa
+
+        const etapasConfig = {
+            1: ["unidadeCurricular", "anoPeriodo"],
+            2: ["conteudo", "habilidadesSociais"],
+            3: ["funcoesCognitivasCriar", "funcoesCognitivasAplicar"],
+            4: ["funcoesCognitivasSintetizar", "funcoesCognitivasEntender"],
+            5: ["funcoesCognitivasAnalisar", "funcoesCognitivasLembrar"],
+            6: ["ambientacaoAtmosfera", "ambientacaoCenario"],
+            7: ["enredo", "tema"],
+            8: ["sessoes"],
+            9: ["funcoes", "regrasAleatoriedade", "regrasRecompensas", "regrasFeedback"],
+            10: ["personagens", "materiais"]
+        };
+
+
+        // Objeto inicial
+        let database = {
+            "unidadeCurricular": "",
+            "anoPeriodo": "",
+            "conteudo": "",
+            "habilidadesSociais": [],
+            "funcoesCognitivasCriar": "",
+            "funcoesCognitivasAplicar": "",
+            "funcoesCognitivasSintetizar": "",
+            "funcoesCognitivasEntender": "",
+            "funcoesCognitivasAnalisar": "",
+            "funcoesCognitivasLembrar": "",
+            "ambientacaoAtmosfera": "",
+            "ambientacaoCenario": "",
+            "ambientacaoEespaco": [],
+            "enredo": [],
+            "tema": "",
+            "sessoes": [],  
+            "funcoes": [],
+            "regrasAleatoriedade": "",
+            "regrasRecompensas": "",
+            "regrasFeedback": "",
+            "personagens": [],
+            "materiais": []
+            };
+
+        // Carregar dados do localStorage
+        const savedData = localStorage.getItem("database");
+        if (savedData) {
+            database = JSON.parse(savedData);
+        }        
+
+        // Configuração do JSON Editor
+        const editor = new JSONEditor(document.getElementById("editor"), {
+            schema: {
+                "type": "object",
+                "properties": {
+                    "unidadeCurricular": {
+                        "type": "string",
+                        "description": "Nome da unidade curricular"
+                    },
+                    "anoPeriodo": {
+                        "type": "string",
+                        "description": "Ano e período letivo"
+                    },
+                    "conteudo": {
+                        "type": "string",
+                        "description": "Conteúdo principal da unidade"
+                    },
+                    "habilidadesSociais": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "Habilidades sociais a serem desenvolvidas"
+                        }
+                    },
+                    "funcoesCognitivasCriar": {
+                        "type": "string",
+                        "description": "Funções cognitivas relacionadas à criação"
+                    },
+                    "funcoesCognitivasAplicar": {
+                        "type": "string",
+                        "description": "Funções cognitivas relacionadas à aplicação"
+                    },
+                    "funcoesCognitivasSintetizar": {
+                        "type": "string",
+                        "description": "Funções cognitivas relacionadas à síntese"
+                    },
+                    "funcoesCognitivasEntender": {
+                        "type": "string",
+                        "description": "Funções cognitivas relacionadas ao entendimento"
+                    },
+                    "funcoesCognitivasAnalisar": {
+                        "type": "string",
+                        "description": "Funções cognitivas relacionadas à análise"
+                    },
+                    "funcoesCognitivasLembrar": {
+                        "type": "string",
+                        "description": "Funções cognitivas relacionadas à memória"
+                    },
+                    "ambientacaoAtmosfera": {
+                        "type": "string",
+                        "description": "Atmosfera da ambientação"
+                    },
+                    "ambientacaoCenario": {
+                        "type": "string",
+                        "description": "Cenário da ambientação"
+                    },
+                    "ambientacaoEespaco": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "Espaços da ambientação"
+                        }
+                    },
+                    "enredo": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "problemas": {
+                                    "type": "string",
+                                    "description": "Problemas do enredo"
+                                },
+                                "desafios": {
+                                    "type": "string",
+                                    "description": "Desafios do enredo"
+                                },
+                                "solucao": {
+                                    "type": "string",
+                                    "description": "Solução do enredo"
+                                }
+                            },
+                            "required": ["problemas", "desafios", "solucao"]
+                        }
+                    },
+                    "tema": {
+                        "type": "string",
+                        "description": "Tema principal"
+                    },
+                    "sessoes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "nome": {
+                                    "type": "string",
+                                    "description": "Nome da sessão"
+                                },
+                                "cenas": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "descricao": {
+                                                "type": "string",
+                                                "description": "Descrição da cena"
+                                            },
+                                            "turnos": {
+                                                "type": "integer",
+                                                "description": "Número de turnos da cena"
+                                            }
+                                        },
+                                        "required": ["descricao", "turnos"]
+                                    }
+                                }
+                            },
+                            "required": ["nome", "cenas"]
+                        }
+                    },
+                    "funcoes": {
+                        "type": "array",
+                        "items": {
+                            "title":"Função",
+                            "type": "string",
+                            "description": "Funções a serem desempenhadas"
+                        }
+                    },
+                    "regrasAleatoriedade": {
+                        "type": "string",
+                        "description": "Regras de aleatoriedade"
+                    },
+                    "regrasRecompensas": {
+                        "type": "string",
+                        "description": "Regras de recompensas"
+                    },
+                    "regrasFeedback": {
+                        "type": "string",
+                        "description": "Regras de feedback"
+                    },
+                    "personagens": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "descricao": {
+                                    "type": "string",
+                                    "description": "Descrição do personagem"
+                                },
+                                "funcao": {
+                                    "type": "string",
+                                    "description": "Função do personagem",
+                                    "enum": database.funcoes, // Usa o array de funcoes dinâmico
+                                    "ui": {
+                                        "widget": "select"
+                                    }
+                                },
+                                "categoria": {
+                                    "type": "string",
+                                    "description": "Categoria do personagem"
+                                },
+                                "habilidadesTecnicas": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "descricao": {
+                                                "type": "string",
+                                                "description": "Descrição da habilidade técnica"
+                                            },
+                                            "parametros": {
+                                                "type": "string",
+                                                "description": "Parâmetros da habilidade técnica"
+                                            }
+                                        },
+                                        "required": ["descricao", "parametros"]
+                                    }
+                                },
+                                "habilidadesSociais": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "descricao": {
+                                                "type": "string",
+                                                "description": "Descrição da habilidade social"
+                                            },
+                                            "parametros": {
+                                                "type": "string",
+                                                "description": "Parâmetros da habilidade social"
+                                            }
+                                        },
+                                        "required": ["descricao", "parametros"]
+                                    }
+                                }
+                            },
+                            "required": ["descricao", "funcao", "categoria", "habilidadesTecnicas", "habilidadesSociais"]
+                        }
+                    },
+                    "materiais": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "descricao": {
+                                    "type": "string",
+                                    "description": "Descrição do material"
+                                },
+                                "quantidade": {
+                                    "type": "string",
+                                    "description": "Quantidade do material"
+                                }
+                            },
+                            "required": ["descricao", "quantidade"]
+                        }
+                    }
+                },
+                "required": [
+                    "unidadeCurricular",
+                    "anoPeriodo",
+                    "conteudo",
+                    "habilidadesSociais",
+                    "funcoesCognitivasCriar",
+                    "funcoesCognitivasAplicar",
+                    "funcoesCognitivasSintetizar",
+                    "funcoesCognitivasEntender",
+                    "funcoesCognitivasAnalisar",
+                    "funcoesCognitivasLembrar",
+                    "ambientacaoAtmosfera",
+                    "ambientacaoCenario",
+                    "ambientacaoEespaco",
+                    "enredo",
+                    "tema",
+                    "sessoes",
+                    "funcoes",
+                    "regrasAleatoriedade",
+                    "regrasRecompensas",
+                    "regrasFeedback",
+                    "personagens",
+                    "materiais"
+                ]
+            },
+            startval: database,
+            theme: "bootstrap4",
+            iconlib: "bootstrap4",
+            disable_collapse: true,
+            disable_edit_json: true,
+            disable_properties: false,
+            no_additional_properties: true
+        });
+
+        // Salvar dados no localStorage
+        function saveData() {            
+            const updatedData = editor.getValue();
+            localStorage.setItem("database", JSON.stringify(updatedData, null, 4));            
+            document.getElementById("output").textContent = JSON.stringify(updatedData, null, 4); 
+        }
+
+        function atualizarCampos() {
+            const propriedades = editor.root.getChildEditors();
+            
+            Object.keys(propriedades).forEach((campo) => {
+                if (etapasConfig[etapaAtual].includes(campo)) {
+                    propriedades[campo].container.style.display = "block"; // Exibe o campo
+                } else {
+                    propriedades[campo].container.style.display = "none"; // Oculta o campo
+                }
+            });
+        }
+
+        function atualizarFluxo() {
+            const listaProcessos = document.getElementById("lista-processos");
+            listaProcessos.innerHTML = "";
+
+            const processos = [
+                "Início",
+                "Preenchimento dos Dados Básicos",
+                "Definição das Habilidades Sociais",
+                "Configuração das Funções Cognitivas",
+                "Ambientação e Cenário",
+                "Criação do Enredo",
+                "Definição do Tema e Sessões",
+                "Regras do Jogo",
+                "Criação de Personagens e Materiais",
+                "Finalização e Revisão"
+            ];
+
+            processos.forEach((processo, index) => {
+                let item = document.createElement("li");
+                item.textContent = `${index + 1}. ${processo}`;
+
+                // Destaca a etapa atual
+                if (index + 1 === etapaAtual) {
+                    item.classList.add("destacado");
+                }
+
+                listaProcessos.appendChild(item);
+            });
+        }
+
+        // Chamar a função ao iniciar e sempre que mudar a etapa
+        atualizarFluxo();
+
+        // Atualiza ao mudar de etapa
+        function mudarEtapa(direcao) {
+            etapaAtual += direcao;
+            if (etapaAtual < 1) etapaAtual = 1;
+            if (etapaAtual > 10) etapaAtual = 10;
+            
+            atualizarFluxo();
+            atualizarCampos(); // Atualiza os campos do formulário
+        }
+
+
+        // Exibir os dados ao carregar a página
+        document.getElementById("output").textContent = JSON.stringify(database, null, 4);
+    </script>
+
 </body>
 </html>
