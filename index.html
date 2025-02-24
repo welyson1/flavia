@@ -75,23 +75,34 @@
             border-radius: 10px;
             margin-top: 20px;
         }
+
+        .json-editor-btntype-delete {
+            color: white !important;
+            background-color: red !important;
+            border-color: darkred !important;
+        }
+
+        .json-editor-btntype-delete:hover {
+            background-color: darkred !important;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1 class="text-center">Editor de JSON Dinâmico</h1>
+        <h1 class="text-center"> CreativEduc</h1>
         <div id="fluxo-processo" class="mt-3">
             <ul id="lista-processos"></ul>
         </div>
         
 
         <button class="btn btn-success mt-3" onclick="mudarEtapa(-1)">Etapa Anterior</button>
-        <button class="btn btn-primary mt-3" onclick="mudarEtapa(1)">Próxima Etapa</button>      
+        <button class="btn btn-primary mt-3" onclick="mudarEtapa(1)">Próxima Etapa</button>
+        <button class="btn btn-primary mt-3" onclick="saveData()">Salvar Dados</button>      
           
         <div id="editor"></div>
-        <div id="bloco-explicacao" class="bloco-explicacao" style="display: none;"></div>
-        <button class="btn btn-primary mt-3" onclick="saveData()">Salvar Dados</button>
+        <div id="bloco-explicacao" class="bloco-explicacao" style="display: none;"></div>        
         <h2 class="mt-4">JSON Salvo</h2>
         <pre id="output"></pre>
     </div>
@@ -100,23 +111,23 @@
         let etapaAtual = 1; // Começa na primeira etapa
 
         const etapasConfig = {
-            1: ["unidadeCurricular", "anoPeriodo"],
-            2: ["conteudo", "habilidadesSociais"],
-            3: ["funcoesCognitivasCriar", "funcoesCognitivasAplicar"],
-            4: ["funcoesCognitivasSintetizar", "funcoesCognitivasEntender"],
-            5: ["funcoesCognitivasAnalisar", "funcoesCognitivasLembrar"],
-            6: ["ambientacaoAtmosfera", "ambientacaoCenario"],
-            7: ["enredo", "tema"],
-            8: ["sessoes"],
-            9: ["funcoes", "regrasAleatoriedade", "regrasRecompensas", "regrasFeedback"],
-            10: ["personagens", "materiais"],
-            11: ["personagens", "materiais"]
+            1: ["unidadeCurricular", "anoPeriodo", "conteudo", "habilidadesSociais", "funcoesCognitivasCriar", "funcoesCognitivasAplicar", "funcoesCognitivasSintetizar", "funcoesCognitivasEntender", "funcoesCognitivasAnalisar", "funcoesCognitivasLembrar"],
+            2: ["tema"],
+            3: [],
+            4: ["ambientacaoAtmosfera", "ambientacaoCenario", "ambientacaoEspaco"],
+            5: [],
+            6: ["funcoes"],
+            7: [],
+            8: ["enredo"],
+            9: ["sessoes"],
+            10: ["regrasAleatoriedade", "regrasRecompensas", "regrasFeedback", "personagens"],
+            11: ["materiais"]
         };
 
         const blocosExplicacao = {
             3: "<h3>Explicação sobre Funções Cognitivas</h3><p>Aqui você pode definir as funções cognitivas que serão utilizadas no jogo.</p>",
-            6: "<h3>Explicação sobre Ambientação</h3><p>Defina a atmosfera e o cenário do jogo.</p>",
-            9: "<h3>Explicação sobre Regras do Jogo</h3><p>Defina as regras de aleatoriedade, recompensas e feedback.</p>"
+            5: "<h3>Explicação sobre Ambientação</h3><p>Defina a atmosfera e o cenário do jogo.</p>",
+            7: "<h3>Explicação sobre Regras do Jogo</h3><p>Defina as regras de aleatoriedade, recompensas e feedback.</p>"
         };
 
         // Objeto inicial
@@ -133,7 +144,7 @@
             "funcoesCognitivasLembrar": "",
             "ambientacaoAtmosfera": "",
             "ambientacaoCenario": "",
-            "ambientacaoEespaco": [],
+            "ambientacaoEspaco": [],
             "enredo": [],
             "tema": "",
             "sessoes": [],  
@@ -149,66 +160,109 @@
         const savedData = localStorage.getItem("database");
         if (savedData) {
             database = JSON.parse(savedData);
-        }        
+        }
 
         // Configuração do JSON Editor
         const editor = new JSONEditor(document.getElementById("editor"), {
             schema: {
                 "type": "object",
+                "title":"Formulario para preencher",
                 "properties": {
                     "unidadeCurricular": {
                         "type": "string",
+                        "title":"Unidade Curricular",
                         "description": "Nome da unidade curricular"
                     },
                     "anoPeriodo": {
                         "type": "string",
+                        "title":"Ano/Periodo",
                         "description": "Ano e período letivo"
                     },
                     "conteudo": {
                         "type": "string",
+                        "title":"Conteúdo",
                         "description": "Conteúdo principal da unidade"
                     },
                     "habilidadesSociais": {
                         "type": "array",
+                        "title":"Habilidades Sociais",
                         "items": {
                             "type": "string",
-                            "description": "Habilidades sociais a serem desenvolvidas"
+                            "title":"Habilidade Social",
+                            "description": "Habilidades sociais a serem desenvolvidas",
+                            "enum":["Capacidade de entender e solucionar problemas", "Questões sociais e culturais por meio de análise de contexto de forma não técnica", "Análise do impacto nas mudanças sociais ocasionadas pela tecnologia", "Resolução de conflitos", "Visão sistêmica", "Consciência crítica e aguçada"],
+                            "ui": {
+                                "widget": "select"
+                            }
                         }
                     },
                     "funcoesCognitivasCriar": {
                         "type": "string",
-                        "description": "Funções cognitivas relacionadas à criação"
+                        "title":"Funções Cognitivas: Criar",
+                        "description": "Funções cognitivas relacionadas à criação",
+                        "enum":["Planejar", "Combinar", "Compor", "Efetivar"],
+                        "ui": {
+                            "widget": "select"
+                        }
                     },
                     "funcoesCognitivasAplicar": {
                         "type": "string",
-                        "description": "Funções cognitivas relacionadas à aplicação"
+                        "title":"Funções Cognitivas: Aplicar",
+                        "description": "Funções cognitivas relacionadas à aplicação",
+                        "enum":["Classificar", "Experimentar", "Calcular", "Construir"],
+                        "ui": {
+                            "widget": "select"
+                        }
                     },
                     "funcoesCognitivasSintetizar": {
                         "type": "string",
-                        "description": "Funções cognitivas relacionadas à síntese"
+                        "title":"Funções Cognitivas: Sintetizar",
+                        "description": "Funções cognitivas relacionadas à síntese",
+                        "enum":["Raquear", "Avaliar", "Concluir", "Agir"],
+                        "ui": {
+                            "widget": "select"
+                        }
                     },
                     "funcoesCognitivasEntender": {
                         "type": "string",
-                        "description": "Funções cognitivas relacionadas ao entendimento"
+                        "title":"Funções Cognitivas: Entender",
+                        "description": "Funções cognitivas relacionadas ao entendimento",
+                        "enum":["Resumir", "Interpretar", "Prever", "Executar"],
+                        "ui": {
+                            "widget": "select"
+                        }
                     },
                     "funcoesCognitivasAnalisar": {
                         "type": "string",
-                        "description": "Funções cognitivas relacionadas à análise"
+                        "title":"Funções Cognitivas: Analisar",
+                        "description": "Funções cognitivas relacionadas à análise",
+                        "enum":["Ordenar", "Explicar", "Diferenciar", "Alcançar"],
+                        "ui": {
+                            "widget": "select"
+                        }
                     },
                     "funcoesCognitivasLembrar": {
                         "type": "string",
-                        "description": "Funções cognitivas relacionadas à memória"
+                        "title":"Funções Cognitivas: Lembrar",
+                        "description": "Funções cognitivas relacionadas à memória",
+                        "enum":["Listar", "Descrever", "Tabular", "Uso apropriado"],
+                        "ui": {
+                            "widget": "select"
+                        }
                     },
                     "ambientacaoAtmosfera": {
                         "type": "string",
+                        "title":"Ambientação/Atmosfera",
                         "description": "Atmosfera da ambientação"
                     },
                     "ambientacaoCenario": {
                         "type": "string",
+                        "title":"Ambientação Cenario",
                         "description": "Cenário da ambientação"
                     },
-                    "ambientacaoEespaco": {
+                    "ambientacaoEspaco": {
                         "type": "array",
+                        "title":"Ambientação Espaço",
                         "items": {
                             "type": "string",
                             "description": "Espaços da ambientação"
@@ -216,19 +270,24 @@
                     },
                     "enredo": {
                         "type": "array",
+                        "title":"Enredo",
                         "items": {
                             "type": "object",
+                            "title":"Enredo",
                             "properties": {
                                 "problemas": {
                                     "type": "string",
+                                    "title":"Problemas",
                                     "description": "Problemas do enredo"
                                 },
                                 "desafios": {
                                     "type": "string",
+                                    "title":"Desafios",
                                     "description": "Desafios do enredo"
                                 },
                                 "solucao": {
                                     "type": "string",
+                                    "title":"Solução",
                                     "description": "Solução do enredo"
                                 }
                             },
@@ -298,8 +357,9 @@
                                     "type": "string",
                                     "description": "Descrição do personagem"
                                 },
-                                "funcao": {
+                                "items": {
                                     "type": "string",
+                                    "title":"Função",
                                     "description": "Função do personagem",
                                     "enum": database.funcoes, // Usa o array de funcoes dinâmico
                                     "ui": {
@@ -308,12 +368,19 @@
                                 },
                                 "categoria": {
                                     "type": "string",
-                                    "description": "Categoria do personagem"
+                                    "title":"Categoria",
+                                    "description": "Categoria do personagem",
+                                    "enum":["Protagonistas", "Antagonistas", "Coadjuvantes", "Narrador"],
+                                    "ui": {
+                                        "widget": "select"
+                                    }
                                 },
                                 "habilidadesTecnicas": {
                                     "type": "array",
+                                    "title":"Habilidades Tecnicas",
                                     "items": {
                                         "type": "object",
+                                        "title":"Habilidade Tecnica",
                                         "properties": {
                                             "descricao": {
                                                 "type": "string",
@@ -323,14 +390,15 @@
                                                 "type": "string",
                                                 "description": "Parâmetros da habilidade técnica"
                                             }
-                                        },
-                                        "required": ["descricao", "parametros"]
+                                        }
                                     }
                                 },
                                 "habilidadesSociais": {
                                     "type": "array",
+                                    "title":"Habilidades Sociais",
                                     "items": {
                                         "type": "object",
+                                        "title":"Habilidade Social",
                                         "properties": {
                                             "descricao": {
                                                 "type": "string",
@@ -338,14 +406,13 @@
                                             },
                                             "parametros": {
                                                 "type": "string",
+                                                "title":"Parametros",
                                                 "description": "Parâmetros da habilidade social"
                                             }
-                                        },
-                                        "required": ["descricao", "parametros"]
+                                        }
                                     }
                                 }
-                            },
-                            "required": ["descricao", "funcao", "categoria", "habilidadesTecnicas", "habilidadesSociais"]
+                            }
                         }
                     },
                     "materiais": {
@@ -365,31 +432,7 @@
                             "required": ["descricao", "quantidade"]
                         }
                     }
-                },
-                "required": [
-                    "unidadeCurricular",
-                    "anoPeriodo",
-                    "conteudo",
-                    "habilidadesSociais",
-                    "funcoesCognitivasCriar",
-                    "funcoesCognitivasAplicar",
-                    "funcoesCognitivasSintetizar",
-                    "funcoesCognitivasEntender",
-                    "funcoesCognitivasAnalisar",
-                    "funcoesCognitivasLembrar",
-                    "ambientacaoAtmosfera",
-                    "ambientacaoCenario",
-                    "ambientacaoEespaco",
-                    "enredo",
-                    "tema",
-                    "sessoes",
-                    "funcoes",
-                    "regrasAleatoriedade",
-                    "regrasRecompensas",
-                    "regrasFeedback",
-                    "personagens",
-                    "materiais"
-                ]
+                }
             },
             startval: database,
             theme: "bootstrap4",
@@ -397,7 +440,9 @@
             disable_collapse: true,
             disable_edit_json: true,
             disable_properties: false,
-            no_additional_properties: true
+            no_additional_properties: true,
+            prompt_before_delete: false,
+            array_controls_top:true
         });
 
         // Salvar dados no localStorage
@@ -424,17 +469,17 @@
             listaProcessos.innerHTML = "";
 
             const processos = [
-                "Início",
-                "Preenchimento dos Dados Básicos",
-                "Definição das Habilidades Sociais",
-                "Configuração das Funções Cognitivas",
-                "Ambientação e Cenário",
-                "Criação do Enredo",
-                "Definição do Tema e Sessões",
-                "Regras do Jogo",
-                "Criação de Personagens e Materiais",
-                "Finalização e Revisão",
-                "Finalização e Revisão"
+                "Objetivos de aprendizagem",
+                "Design Estética",
+                "DSC",
+                "Design Estética",
+                "DSC",
+                "Design Dinâmica",
+                "DSC",
+                "Design Estética",
+                "Design Dinamica",
+                "Design Mecânica",
+                "Materiais"
             ];
 
             processos.forEach((processo, index) => {
@@ -463,11 +508,7 @@
                 editorDiv.style.display = "block";
             }
         }
-
-        // Chamar a função ao iniciar e sempre que mudar a etapa
-        atualizarFluxo();
-        exibirBlocoExplicacao();
-
+        
         // Atualiza ao mudar de etapa
         function mudarEtapa(direcao) {
             etapaAtual += direcao;
@@ -477,11 +518,20 @@
             atualizarFluxo();
             atualizarCampos(); // Atualiza os campos do formulário
             exibirBlocoExplicacao(); // Atualiza o bloco de explicação
+            
+            saveData();
         }
+
 
         // Exibir os dados ao carregar a página
         document.getElementById("output").textContent = JSON.stringify(database, null, 4);
-    </script>
 
+        setTimeout(() => {
+            atualizarFluxo();
+            atualizarCampos();
+            exibirBlocoExplicacao();
+        }, 100);
+
+    </script>
 </body>
 </html>
