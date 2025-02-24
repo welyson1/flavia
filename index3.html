@@ -69,12 +69,6 @@
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
         }
 
-        .bloco-explicacao {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -90,7 +84,6 @@
         <button class="btn btn-primary mt-3" onclick="mudarEtapa(1)">Próxima Etapa</button>      
           
         <div id="editor"></div>
-        <div id="bloco-explicacao" class="bloco-explicacao" style="display: none;"></div>
         <button class="btn btn-primary mt-3" onclick="saveData()">Salvar Dados</button>
         <h2 class="mt-4">JSON Salvo</h2>
         <pre id="output"></pre>
@@ -109,15 +102,9 @@
             7: ["enredo", "tema"],
             8: ["sessoes"],
             9: ["funcoes", "regrasAleatoriedade", "regrasRecompensas", "regrasFeedback"],
-            10: ["personagens", "materiais"],
-            11: ["personagens", "materiais"]
+            10: ["personagens", "materiais"]
         };
 
-        const blocosExplicacao = {
-            3: "<h3>Explicação sobre Funções Cognitivas</h3><p>Aqui você pode definir as funções cognitivas que serão utilizadas no jogo.</p>",
-            6: "<h3>Explicação sobre Ambientação</h3><p>Defina a atmosfera e o cenário do jogo.</p>",
-            9: "<h3>Explicação sobre Regras do Jogo</h3><p>Defina as regras de aleatoriedade, recompensas e feedback.</p>"
-        };
 
         // Objeto inicial
         let database = {
@@ -433,7 +420,6 @@
                 "Definição do Tema e Sessões",
                 "Regras do Jogo",
                 "Criação de Personagens e Materiais",
-                "Finalização e Revisão",
                 "Finalização e Revisão"
             ];
 
@@ -450,34 +436,19 @@
             });
         }
 
-        function exibirBlocoExplicacao() {
-            const blocoExplicacao = document.getElementById("bloco-explicacao");
-            const editorDiv = document.getElementById("editor");
-
-            if (blocosExplicacao[etapaAtual]) {
-                blocoExplicacao.innerHTML = blocosExplicacao[etapaAtual];
-                blocoExplicacao.style.display = "block";
-                editorDiv.style.display = "none";
-            } else {
-                blocoExplicacao.style.display = "none";
-                editorDiv.style.display = "block";
-            }
-        }
-
         // Chamar a função ao iniciar e sempre que mudar a etapa
         atualizarFluxo();
-        exibirBlocoExplicacao();
 
         // Atualiza ao mudar de etapa
         function mudarEtapa(direcao) {
             etapaAtual += direcao;
             if (etapaAtual < 1) etapaAtual = 1;
-            if (etapaAtual > 11) etapaAtual = 11;
+            if (etapaAtual > 10) etapaAtual = 10;
             
             atualizarFluxo();
             atualizarCampos(); // Atualiza os campos do formulário
-            exibirBlocoExplicacao(); // Atualiza o bloco de explicação
         }
+
 
         // Exibir os dados ao carregar a página
         document.getElementById("output").textContent = JSON.stringify(database, null, 4);
