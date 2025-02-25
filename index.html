@@ -111,7 +111,7 @@
         let etapaAtual = 1; // Começa na primeira etapa
 
         const etapasConfig = {
-            1: ["unidadeCurricular", "anoPeriodo", "conteudo", "habilidadesSociais", "funcoesCognitivasCriar", "funcoesCognitivasAplicar", "funcoesCognitivasSintetizar", "funcoesCognitivasEntender", "funcoesCognitivasAnalisar", "funcoesCognitivasLembrar"],
+            1: ["unidadeCurricular", "anoPeriodo", "conteudo", "habilidadesSociais", "habilidadesTecnicas", "funcoesAprendizagemCriar", "funcoesAprendizagemAplicar", "funcoesAprendizagemSintetizar", "funcoesAprendizagemEntender", "funcoesAprendizagemAnalisar", "funcoesAprendizagemLembrar"],
             2: ["tema"],
             3: [],
             4: ["ambientacaoAtmosfera", "ambientacaoCenario", "ambientacaoEspaco"],
@@ -121,13 +121,16 @@
             8: ["enredo"],
             9: ["sessoes"],
             10: ["regrasAleatoriedade", "regrasRecompensas", "regrasFeedback", "personagens"],
-            11: ["materiais"]
+            11: ["materiais"],
+            12: [],
+            13: ["historia"]
         };
 
         const blocosExplicacao = {
-            3: "<h3>Explicação sobre Funções Cognitivas</h3><p>Aqui você pode definir as funções cognitivas que serão utilizadas no jogo.</p>",
+            3: "<h3>Explicação sobre Funções Aprendizagem</h3><p>Aqui você pode definir as funções Aprendizagem que serão utilizadas no jogo.</p>",
             5: "<h3>Explicação sobre Ambientação</h3><p>Defina a atmosfera e o cenário do jogo.</p>",
-            7: "<h3>Explicação sobre Regras do Jogo</h3><p>Defina as regras de aleatoriedade, recompensas e feedback.</p>"
+            7: "<h3>Quadro avaliacao</h3><p>Defina as regras de aleatoriedade, recompensas e feedback.</p>",
+            12: "<h3>Historia</h3><p>Defina as regras de aleatoriedade, recompensas e feedback.</p>"
         };
 
         // Objeto inicial
@@ -136,12 +139,13 @@
             "anoPeriodo": "",
             "conteudo": "",
             "habilidadesSociais": [],
-            "funcoesCognitivasCriar": "",
-            "funcoesCognitivasAplicar": "",
-            "funcoesCognitivasSintetizar": "",
-            "funcoesCognitivasEntender": "",
-            "funcoesCognitivasAnalisar": "",
-            "funcoesCognitivasLembrar": "",
+            "habilidadesTecnicas": [],
+            "funcoesAprendizagemCriar": "",
+            "funcoesAprendizagemAplicar": "",
+            "funcoesAprendizagemSintetizar": "",
+            "funcoesAprendizagemEntender": "",
+            "funcoesAprendizagemAnalisar": "",
+            "funcoesAprendizagemLembrar": "",
             "ambientacaoAtmosfera": "",
             "ambientacaoCenario": "",
             "ambientacaoEspaco": [],
@@ -153,8 +157,9 @@
             "regrasRecompensas": "",
             "regrasFeedback": "",
             "personagens": [],
-            "materiais": []
-            };
+            "materiais": [],
+            "historia": ""
+        };
 
         // Carregar dados do localStorage
         const savedData = localStorage.getItem("database");
@@ -190,62 +195,74 @@
                             "type": "string",
                             "title":"Habilidade Social",
                             "description": "Habilidades sociais a serem desenvolvidas",
-                            "enum":["Capacidade de entender e solucionar problemas", "Questões sociais e culturais por meio de análise de contexto de forma não técnica", "Análise do impacto nas mudanças sociais ocasionadas pela tecnologia", "Resolução de conflitos", "Visão sistêmica", "Consciência crítica e aguçada"],
+                            "enum":["", "Capacidade de entender e solucionar problemas", "Questões sociais e culturais por meio de análise de contexto de forma não técnica", "Análise do impacto nas mudanças sociais ocasionadas pela tecnologia", "Resolução de conflitos", "Visão sistêmica", "Consciência crítica e aguçada"],
                             "ui": {
                                 "widget": "select"
                             }
                         }
                     },
-                    "funcoesCognitivasCriar": {
+                    "habilidadesTecnicas": {
+                        "type": "array",
+                        "title":"Habilidades Tecnicas",
+                        "items": {
+                            "type": "string",
+                            "title":"Habilidade Tecnica",
+                            "description": "Habilidades Tecnica a serem desenvolvidas",                           
+                            "ui": {
+                                "widget": "select"
+                            }
+                        }
+                    },
+                    "funcoesAprendizagemCriar": {
                         "type": "string",
-                        "title":"Funções Cognitivas: Criar",
-                        "description": "Funções cognitivas relacionadas à criação",
-                        "enum":["Planejar", "Combinar", "Compor", "Efetivar"],
+                        "title":"Funções Aprendizagem: Criar",
+                        "description": "Funções Aprendizagem relacionadas à criação",
+                        "enum":["", "Planejar", "Combinar", "Compor", "Efetivar"],
                         "ui": {
                             "widget": "select"
                         }
                     },
-                    "funcoesCognitivasAplicar": {
+                    "funcoesAprendizagemAplicar": {
                         "type": "string",
-                        "title":"Funções Cognitivas: Aplicar",
-                        "description": "Funções cognitivas relacionadas à aplicação",
-                        "enum":["Classificar", "Experimentar", "Calcular", "Construir"],
+                        "title":"Funções Aprendizagem: Aplicar",
+                        "description": "Funções Aprendizagem relacionadas à aplicação",
+                        "enum":["", "Classificar", "Experimentar", "Calcular", "Construir"],
                         "ui": {
                             "widget": "select"
                         }
                     },
-                    "funcoesCognitivasSintetizar": {
+                    "funcoesAprendizagemSintetizar": {
                         "type": "string",
-                        "title":"Funções Cognitivas: Sintetizar",
-                        "description": "Funções cognitivas relacionadas à síntese",
-                        "enum":["Raquear", "Avaliar", "Concluir", "Agir"],
+                        "title":"Funções Aprendizagem: Sintetizar",
+                        "description": "Funções Aprendizagem relacionadas à síntese",
+                        "enum":["", "Raquear", "Avaliar", "Concluir", "Agir"],
                         "ui": {
                             "widget": "select"
                         }
                     },
-                    "funcoesCognitivasEntender": {
+                    "funcoesAprendizagemEntender": {
                         "type": "string",
-                        "title":"Funções Cognitivas: Entender",
-                        "description": "Funções cognitivas relacionadas ao entendimento",
-                        "enum":["Resumir", "Interpretar", "Prever", "Executar"],
+                        "title":"Funções Aprendizagem: Entender",
+                        "description": "Funções Aprendizagem relacionadas ao entendimento",
+                        "enum":["", "Resumir", "Interpretar", "Prever", "Executar"],
                         "ui": {
                             "widget": "select"
                         }
                     },
-                    "funcoesCognitivasAnalisar": {
+                    "funcoesAprendizagemAnalisar": {
                         "type": "string",
-                        "title":"Funções Cognitivas: Analisar",
-                        "description": "Funções cognitivas relacionadas à análise",
-                        "enum":["Ordenar", "Explicar", "Diferenciar", "Alcançar"],
+                        "title":"Funções Aprendizagem: Analisar",
+                        "description": "Funções Aprendizagem relacionadas à análise",
+                        "enum":["", "Ordenar", "Explicar", "Diferenciar", "Alcançar"],
                         "ui": {
                             "widget": "select"
                         }
                     },
-                    "funcoesCognitivasLembrar": {
+                    "funcoesAprendizagemLembrar": {
                         "type": "string",
-                        "title":"Funções Cognitivas: Lembrar",
-                        "description": "Funções cognitivas relacionadas à memória",
-                        "enum":["Listar", "Descrever", "Tabular", "Uso apropriado"],
+                        "title":"Funções Aprendizagem: Lembrar",
+                        "description": "Funções Aprendizagem relacionadas à memória",
+                        "enum":["", "Listar", "Descrever", "Tabular", "Uso apropriado"],
                         "ui": {
                             "widget": "select"
                         }
@@ -431,7 +448,12 @@
                             },
                             "required": ["descricao", "quantidade"]
                         }
-                    }
+                    },
+                    "historia": {
+                        "type": "string",
+                        "title":"Historia",
+                        "description": "Coloque sua Historia aqui"
+                    },
                 }
             },
             startval: database,
@@ -479,7 +501,9 @@
                 "Design Estética",
                 "Design Dinamica",
                 "Design Mecânica",
-                "Materiais"
+                "Materiais",
+                "Historia",
+                "Final"
             ];
 
             processos.forEach((processo, index) => {
@@ -513,7 +537,7 @@
         function mudarEtapa(direcao) {
             etapaAtual += direcao;
             if (etapaAtual < 1) etapaAtual = 1;
-            if (etapaAtual > 11) etapaAtual = 11;
+            if (etapaAtual > 13) etapaAtual = 13;
             
             atualizarFluxo();
             atualizarCampos(); // Atualiza os campos do formulário
